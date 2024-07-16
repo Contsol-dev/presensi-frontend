@@ -1,0 +1,20 @@
+@media (max-width: 700px) {
+    .navbar .menu.closed {
+        display: none;
+    }
+
+    .navbar .hamburger {
+        display: block;
+    }
+}
+
+@media (min-width: 701px) {
+    .navbar .hamburger {
+        display: none;
+    }
+}
+
+.navbar .menu {
+    transition: all 0.3s ease;
+}
+

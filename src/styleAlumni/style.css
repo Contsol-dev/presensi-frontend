@@ -1,0 +1,503 @@
+/* layar laptop */
+.adjust {
+    min-height: 100vh;
+  }
+  .menu-container {
+    margin-left: -500px; 
+  }
+  .bg-button {
+    background-color: #1b69b6; 
+  }
+  .bg-h1 {
+    background-color: #b61b1b; 
+  }
+  .bg-grey {
+    background-color: grey; 
+  }
+  .text-button {
+    color: #1b69b6; 
+  }
+  .syalita {
+    font-family: 'Syalita', sans-serif; 
+  }
+  .rounded {
+    border-radius: 0.25rem; 
+  }
+  .flex {
+    display: flex;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .gap-2 {
+    gap: 0.5rem;
+  }
+  .gap-3 {
+    gap: 0.75rem;
+  }
+  .gap-4 {
+    gap: 1rem; 
+  }
+  .gap-8 {
+    gap: 2rem;
+  }
+  .gap-10 {
+    gap: 2.5rem;
+  }
+  .w-full {
+    width: 100%;
+  }
+  .h-screen {
+    height: 100vh;
+  }
+  .p-1 {
+    padding: 0.25rem;
+  }
+  .p-2 {
+    padding: 0.5rem;
+  }
+  .p-4 {
+    padding: 1rem;
+  }
+  .p-5 {
+    padding: 1.25rem;
+  }
+  .py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+  .px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  .py-10 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  .px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .text-center {
+    text-align: center;
+  }
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  .text-xl {
+    font-size: 1.25rem;
+  }
+  .md:text-xl {
+    font-size: 1.25rem;
+  }
+  .md:text-2xl {
+    font-size: 1.5rem;
+  }
+  .md:text-3xl {
+    font-size: 1.875rem;
+  }
+  .w-fit {
+    width: fit-content;
+  }
+  .rounded-xl {
+    border-radius: 0.75rem;
+  }
+  .border-2 {
+    border-width: 2px;
+  }
+  
+  .border-grey {
+    border-color: grey;
+  }
+  .border-black {
+    border-color: black;
+  }
+  .hover\:text-button:hover {
+    color: #1b69b6;
+  }
+  .hover\:bg-button:hover {
+    background-color: #1b69b6;
+  }
+  .transition-all {
+    transition-property: all;
+    transition-duration: 0.3s;
+  }
+  .duration-150 {
+    transition-duration: 150ms;
+  }
+  .fixed {
+    position: fixed;
+  }
+  .top-0 {
+    top: 0;
+  }
+  .right-0 {
+    right: 0;
+  }
+  .bottom-0 {
+    bottom: 0;
+  }
+  .left-0 {
+    left: 0;
+  }
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  .rounded-md {
+    border-radius: 0.375rem;
+  }
+  .bg-white {
+    background-color: #ffffff;
+  } 
+  .bg-cover {
+    background-size: cover;
+  }
+  .bg-center {
+    background-position: center;
+  }
+  .z-10 {
+    z-index: 10;
+  }
+  .font-bold {
+    font-weight: bold;
+  }
+  .font-semibold {
+    font-weight: 600;
+  }
+  .font-thin {
+    font-weight: 300;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  } 
+  .flex-col {
+    flex-direction: column;
+  } 
+  .flex-row {
+    flex-direction: row;
+  }
+  .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .px-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+  .p-10 {
+    padding: 2.5rem;
+  }
+  .w-14 {
+    width: 3.5rem;
+  }
+  .h-14 {
+    height: 3.5rem;
+  }
+  .opacity-0 {
+    opacity: 0;
+  }
+  .opacity-1 {
+    opacity: 1;
+  }
+  .w-14 {
+    width: 3.5rem;
+  }
+  .h-14 {
+    height: 3.5rem;
+  }
+  .opacity-0 {
+    opacity: 0;
+  }
+  .opacity-1 {
+    opacity: 1;
+  }
+  .w-14 {
+    width: 3.5rem;
+  }
+  .h-14 {
+    height: 3.5rem;
+  }
+  .opacity-0 {
+    opacity: 0;
+  }
+  .opacity-1 {
+    opacity: 1;
+  }
+  .transition-opacity {
+    transition-property: opacity;
+  }
+  .transition-transform {
+    transition-property: transform;
+  }
+  .absolute {
+    position: absolute;
+  }
+  .top-0 {
+    top: 0;
+  }
+  .right-0 {
+    right: 0;
+  }
+  .bottom-0 {
+    bottom: 0;
+  }
+  .left-0 {
+    left: 0;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+  
+
+  .flex-col {
+    flex-direction: column;
+  }
+  
+
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+
+  .flex-1 {
+    flex: 1;
+  }
+  
+
+  .flex {
+    display: flex;
+  }
+  
+  
+  .text-center {
+    text-align: center;
+  }
+  
+
+  .w-full {
+    width: 100%;
+  }
+  
+
+  .h-full {
+    height: 100%;
+  }
+  
+
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  
+
+  .max-w-screen-lg {
+    max-width: 1024px;
+  }
+  
+
+  .min-w-0 {
+    min-width: 0;
+  }
+  
+
+  .bg-white {
+    background-color: #fff;
+  }
+  
+
+  .bg-black {
+    background-color: #000;
+  }
+  
+
+  .bg-blue-500 {
+    background-color: #3b82f6;
+  }
+  
+
+  .bg-gray-300 {
+    background-color: #d1d5db;
+  }
+  
+
+  .text-white {
+    color: #fff;
+  }
+  
+
+  .text-gray-800 {
+    color: #374151;
+  }
+  
+
+  .text-blue-500 {
+    color: #3b82f6;
+  }
+  
+
+  .p-4 {
+    padding: 1rem;
+  }
+  
+
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+
+  .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+
+  .px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+
+  .m-0 {
+    margin: 0;
+  }
+  
+
+  .mt-4 {
+    margin-top: 1rem;
+  }
+  
+
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+  
+
+  .ml-3 {
+    margin-left: 0.75rem;
+  }
+  
+
+  .mr-3 {
+    margin-right: 0.75rem;
+  }
+  .border-b-2 {
+    border-bottom-width: 2px;
+  }
+  .border-gray-200 {
+    border-color: #e5e7eb;
+  }
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  .font-semibold {
+    font-weight: 600;
+  }
+  .font-normal {
+    font-weight: 400;
+  }
+  .text-lg {
+    font-size: 1.125rem;
+  }
+  .btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+  }
+  .btn-primary {
+    background-color: #3b82f6;
+    color: #fff;
+  }
+  .btn-secondary {
+    background-color: #d1d5db;
+    color: #374151;
+  }
+/* CSS untuk layar desktop */
+@media screen and (min-width: 769px) {
+    .menu-container {
+      margin-left: -500px;
+    }
+  
+    .instruction-container {
+        position: absolute;
+        top: 40px;
+        right: 0;
+        margin: 65px 20px 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 410px;
+      }
+  }
+  
+/* CSS untuk layar mobile */
+@media screen and (max-width: 768px) {
+    .menu-container {
+        margin-left: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+  
+    .instruction-container {
+      position: absolute;
+      top: 120%; /* Posisikan vertikal di bawah tombol Member Card */
+      left: 47%; /* Posisikan horizontal di tengah layar */
+      transform: translate(-50%, -50%); /* Posisikan tepat di tengah layar */
+      width: 400px; /* Lebarkan kotak instruksi */
+      height: 325px; /* Tetapkan tinggi kotak instruksi */
+      margin-bottom: 50px; /* Tambahkan margin di bagian bawah */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  /* Mengubah ukuran teks instruksi saat tombol Member Card diklik */
+  .instruction-container .text-center {
+      font-size: 12px; /* Atur ukuran teks yang lebih kecil */
+  }
+  
+  
+    /* Menghapus tulisan "Menu" */
+    .menu-container b {
+        display: none;
+    }
+  
+    /* Mengatur tampilan menjadi grid dengan dua baris */
+    .menu-container .flex-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dua kolom */
+        grid-row-gap: 20px; /* Jarak antar baris */
+        margin-right: -125px; /*geser ke kanan*/
+    }
+  
+    /* Mengatur lebar dan margin tombol */
+    .menu-container .flex-col button {
+        width: 100%; /* Lebar penuh untuk tombol */
+        margin-bottom: 0; /* Hapus margin bawah */
+        margin-right: 70px; /* Menempatkan tombol di tengah */
+        font-size: 17px; /* Atur ukuran teks tombol */
+    }
+
+    /* Atur lebar tombol menu */
+    .menu-container .flex-col .menu-btn {
+        width: 80%; /* Misalnya, lebar 80% dari kontainer utama */
+    }
+  
+    /* Memindahkan tombol ke posisi masing-masing */
+    .menu-container .top-left,
+    .menu-container .top-right {
+        order: -1; /* Pindahkan tombol ke kiri */
+    }
+    .menu-container .bottom-left,
+    .menu-container .bottom-right {
+        order: 1; /* Pindahkan tombol ke kanan */
+    }
+}

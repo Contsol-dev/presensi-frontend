@@ -1,0 +1,15 @@
+{
+    "name": "user/presensi",
+    "autoload": {
+        "psr-4": {
+            "User\\Presensi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "septiabela",
+            "email": "septiabela13@gmail.com"
+        }
+    ],
+    "require": {}
+}
