@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { MdOutlineDateRange } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { HiOutlineLogout } from "react-icons/hi";
-import { AiOutlinePlus } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import formattedDate from "@/utils/calender";
@@ -16,6 +15,8 @@ export default function Home() {
   const [time, setTime] = useState("00:00:00");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
+  const nama = localStorage.getItem('nama');
+  const username = localStorage.getItem('username');
 
   const handdleofclickmod2 = () => {
     setmodal2(true);
@@ -204,13 +205,9 @@ export default function Home() {
   let [log, setLog] = useState(false);
   let [buatLog, setBuat] = useState(false);
   let [ganti, setGanti] = useState(false);
-  let [bukti, setBukti] = useState(false);
   let [editLog, setEditLog] = useState(false);
   const openEdit = () => {
     setEditLog(!editLog);
-  };
-  const openBukti = () => {
-    setBukti(!bukti);
   };
   const handleLog = () => {
     setUser((user = false));
@@ -409,7 +406,7 @@ export default function Home() {
                 </div>
 
                 <i className="md:text-3xl mx-auto text-center">
-                  " Sudahkah Anda Istghfar Hari Ini "
+                &quot; Sudahkah Anda Istighfar Hari Ini &quot;
                 </i>
 
                 <div className="flex justify-between items-center">
@@ -420,7 +417,7 @@ export default function Home() {
 
                     <div>
                       <p className="text-sm md:text-2xl font-semibold">
-                        Figo Ferdyian
+                        ${nama}
                       </p>
                       <p className="pr-10 text-[12px] font-thin md:text-lg">
                         MJ/FE/POLINES/AGSTS2023/7
@@ -435,30 +432,7 @@ export default function Home() {
             </div>
 
             <section className=" flex py-10 flex-wrap ">
-              <div className="flex text-h1 text-[16px] font-bold pb-6 justify-end w-full px-5 md:hidden md:px-0 ">
-                <Link href="auth/user/barcode">Lihat barcode Saya</Link>
-              </div>
               <div className="flex  flex-col items-center w-full  mx-10 gap-10 xl:w-1/4   ">
-                {/* <div className="flex justify-center">
-                <div className='relative w-[296px] h-[296px]  flex items-center justify-center'>
-
-                  <div className='absolute w-[260px] h-[260px] flex items-center justify-center bg-white rounded-full'>
-                    <div
-                      className='h-full w-full rounded-full relative flex justify-center items-center'
-                      style={{
-                        background: `
-                      conic-gradient(  #BA181B ,#C90090   ${progress}%, #ECEFF2 ${progress}%)`,
-                      }}
-                    >
-                      <div className='rounded-full absolute bg-white w-[220px] h-[220px] flex justify-center items-center'>
-                        <span className='font-bold text-[28px]'>{time}</span>
-                      </div>
-
-                    </div>
-
-                  </div>
-                </div>
-              </div> */}
                 <div className="flex flex-col text-xl w-full pb-10 gap-8 h-full justify-center ">
                   <b className="mx-auto text-[30px]">Shift Siang</b>
 
@@ -494,9 +468,6 @@ export default function Home() {
 
               <div className=" grid grid-cols-1  mx-auto">
                 <div className="hidden md:flex text-h1 font-bold   justify-end  pb-5  ">
-                  <Link href="/user/barcode" className="">
-                    Lihat barcode Saya
-                  </Link>
                 </div>
 
                 <div className=" flex flex-wrap gap-12 text-[10%] mx-5 pb-10   h-fit md:pb-0 md:mx-0  ">
@@ -512,9 +483,6 @@ export default function Home() {
                           ></span>
                           <b>Masuk</b>
                         </div>
-                        <button className="h-4 w-4 bg-h1 text-[16px] rounded-full items-center flex justify-center text-white">
-                          <AiOutlinePlus />
-                        </button>
                       </div>
                       <div className="flex flex-col px-6 justify-center   h-full  ">
                         {masukTime && (
@@ -546,9 +514,6 @@ export default function Home() {
 
                           <b>Istirahat</b>
                         </div>
-                        <button className="h-4 w-4 bg-h1 text-[16px] rounded-full items-center flex justify-center text-white">
-                          <AiOutlinePlus />
-                        </button>
                       </div>
                       <div className="flex flex-col px-6 justify-center   h-full  ">
                         {istirahatTime && (
@@ -575,9 +540,6 @@ export default function Home() {
                           ></span>
                           <b>Masuk Kembali</b>
                         </div>
-                        <button className="h-4 w-4 bg-h1 text-[16px] rounded-full items-center flex justify-center text-white">
-                          <AiOutlinePlus />
-                        </button>
                       </div>
                       <div className="flex flex-col px-6 justify-center   h-full  ">
                         {masukKembaliTime && (
@@ -602,9 +564,6 @@ export default function Home() {
                           ></span>
                           <b>Pulang</b>
                         </div>
-                        <button className="h-4 w-4 bg-h1 text-[16px] rounded-full items-center flex justify-center text-white">
-                          <AiOutlinePlus />
-                        </button>
                       </div>
                       <div className="flex flex-col px-6 justify-center   h-full  ">
                         {pulangTime && (
@@ -645,8 +604,8 @@ export default function Home() {
                       {modal2 && (
                         <div className="bg-white flex flex-col p-10 absolute box-border h-[254px] bottom-0 ">
                           <i>
-                            "Memberikan kebaikan kepada orang lain berarti juga
-                            memberikan kebaikan kepada diri sendiri."
+                            Memberikan kebaikan kepada orang lain berarti juga
+                            memberikan kebaikan kepada diri sendiri.
                           </i>
                           <br />
                           <br />
@@ -656,34 +615,6 @@ export default function Home() {
                           </b>
                         </div>
                       )}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4 h-[254px] max-w-[600px] w-full p-4">
-                    <b
-                      className={`text-button mx-auto ${
-                        isBlinking ? "text-button" : "text-transparent"
-                      }`}
-                    >
-                      Attention !
-                    </b>
-                    <div className="flex  gap-4 text-[17px] text-button box-border font-semibold ">
-                      <div className="flex w-[60%] px-5 text-center  items-center justify-center border-button border">
-                        <p>
-                          • Kemarin anda absen pulang di kost jangan diulang!
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-2 text-center w-[40%] items-center justify-center border-button border p-4 box-border">
-                        <p>Anda memiliki kekurangan jam kerja</p>
-                        <span className="bg-[#E9ECEF] py-2  border-button border font-bold rounded-md w-[160.521px] text-button">
-                          - 01:14:20
-                        </span>
-                        <p
-                          onClick={handleGanti}
-                          className="cursor-pointer text-[#2b538fea] underline"
-                        >
-                          Lihat Detail
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -711,7 +642,7 @@ export default function Home() {
               </div>
 
               <i className="md:text-3xl mx-auto text-center">
-                " Sudahkah Anda Istghfar Hari Ini "
+                &quot; Sudahkah Anda Istighfar Hari Ini &quot;
               </i>
 
               <div className="flex justify-between items-center">
@@ -722,7 +653,7 @@ export default function Home() {
 
                   <div>
                     <p className="text-sm md:text-2xl font-semibold">
-                      Figo Ferdyian
+                      {nama}
                     </p>
                     <p className="pr-10 text-[12px] font-thin md:text-lg">
                       MJ/FE/POLINES/AGSTS2023/7
@@ -800,113 +731,6 @@ export default function Home() {
           <Table openEdit={openEdit} />
         </div>
       )}
-      {ganti && (
-        <div>
-          <div
-            className="bg-cover bg-center"
-            style={{ backgroundImage: "url(/bgUser.svg)" }}
-          >
-            {/* <img className='absolute top-0 z-0 w-full' src="/bgUser.svg" alt="" /> */}
-            <div className=" figo text-white flex flex-col py-10 md:px-10 gap-10">
-              <div className="w-full flex justify-between">
-                <div className="flex items-center gap-3   ">
-                  <MdOutlineDateRange className="text-[24px] md:text-[34px] " />
-                  <span className="text-[16px] md:text-xl text-white gap-2 items-center ">
-                    {formattedDate}
-                  </span>
-                </div>
-                <span className="font-bold text-[28px]">{time}</span>
-              </div>
-
-              <i className="md:text-3xl mx-auto text-center">
-                " Sudahkah Anda Istghfar Hari Ini "
-              </i>
-
-              <div className="flex justify-between items-center">
-                <div className="flex items-center w-fit bg-black/50 py-2 px-2  rounded-[50px] gap-2">
-                  <span className="flex justify-center items-center bg-button rounded-full  md:text-[50px] p-2">
-                    <RxAvatar />
-                  </span>
-
-                  <div>
-                    <p className="text-sm md:text-2xl font-semibold">
-                      Figo Ferdyian
-                    </p>
-                    <p className="pr-10 text-[12px] font-thin md:text-lg">
-                      MJ/FE/POLINES/AGSTS2023/7
-                    </p>
-                  </div>
-                </div>
-                <button onClick={handleQuit}>
-                  <HiOutlineLogout className="text-[40px] hover:text-button transition-all duration-150" />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-wrap p-3 mx-10 items-center justify-between">
-            <p className="cursor-pointer" onClick={handleBackI}>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 35"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M17.5 3L3 17.5L17.5 32"
-                  stroke="black"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </p>
-            <p className="font-inter font-bold lg:text-xl text-sm">
-              Data Hari Mengganti Jam
-            </p>
-            <p></p>
-          </div>
-          {bukti && (
-            <motion.div
-              transition={{ duration: 0.3 }}
-              className=" h-screen bg-black/50 flex justify-center items-center top-0 w-full z-10 fixed"
-            >
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 10, y: -20 }}
-                className="bg-white adjust  rounded-xl pb-5 px-10 w-[500px] "
-              >
-                <div className="pt-5">
-                  <b className="text-xl font-semibold">Detail Ganti Jam</b>
-                </div>
-                <span className="flex flex-col gap-2">
-                  <p className="font-semibold mt-3">Bukti foto</p>
-                  <p className=" bg-[#f7f3f3] text-[#908f8f] py-1 px-2 overflow-auto">
-                    www.googledrive.com/seveninc/bukti
-                  </p>
-                </span>
-                <span className="flex flex-col gap-2">
-                  <p className="font-semibold mt-3">Bukti foto</p>
-                  <p className=" bg-[#f7f3f3] text-[#908f8f] py-1 px-2 overflow-autoh h-44">
-                    bukti tidak menunjukan sedang sakit badan
-                  </p>
-                </span>
-
-                <div className="flex justify-end pt-6">
-                  <button
-                    className="bg-white rounded-md px-2 py-2 text-black/50  hover:scale-[1.03] transition-all duration-150"
-                    onClick={openBukti}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-          <TableGanti openBukti={openBukti} />
-        </div>
-      )}
     </AnimatePresence>
   );
 }
@@ -951,7 +775,6 @@ function Table({ openEdit }: tableProps2) {
               <th className="p-2 text-center ">No</th>
               <th className="p-2 text-center ">Tanggal</th>
               <th className="p-2 text-center ">Activity Log</th>
-              <th className="p-2 text-center ">Status</th>
               <th className="p-2 text-center ">Aksi</th>
             </tr>
           </thead>
@@ -961,43 +784,6 @@ function Table({ openEdit }: tableProps2) {
               <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
               <td className="p-2 pl-2  text-slate-500">
                 Kucing saya kecelakaan karena tertabrak mobil
-              </td>
-              <td className="p-2 text-center   text-red-500 font-bold">
-                Rejected
-              </td>
-              <th className="p-2 text-center ">
-                <button
-                  className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
-                  onClick={openEdit}
-                >
-                  Edit
-                </button>
-              </th>
-            </tr>
-            <tr className="bg-white">
-              <td className="p-2 text-center  text-slate-500">2</td>
-              <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
-              <td className="p-2 pl-2  text-slate-500">Sedang terkena Flu</td>
-              <td className="p-2 text-center   text-red-500 font-bold">
-                Rejected
-              </td>
-              <th className="p-2 text-center ">
-                <button
-                  className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
-                  onClick={openEdit}
-                >
-                  Edit
-                </button>
-              </th>
-            </tr>
-            <tr>
-              <td className="p-2  text-center  text-slate-500">3</td>
-              <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
-              <td className="p-2 pl-2  text-slate-500">
-                Mengantarkan orang tua umroh
-              </td>
-              <td className="p-2 text-center   text-red-500 font-bold">
-                Rejected
               </td>
               <th className="p-2 text-center ">
                 <button
