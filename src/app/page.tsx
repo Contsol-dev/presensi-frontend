@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { MdOutlineDateRange } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { HiOutlineLogout } from "react-icons/hi";
@@ -12,17 +14,37 @@ export default function Home() {
   const [modalIzin, setModalIzin] = useState(false);
   const [modalMasuk, setModalMasuk] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [masuk, setMasuk] = useState("");
   const [time, setTime] = useState("00:00:00");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
-  const nama = localStorage.getItem('nama');
-  const username = localStorage.getItem('username');
+  const nama = localStorage.getItem("nama");
+  const username = localStorage.getItem("username");
+  const router = useRouter();
 
   const handdleofclickmod2 = () => {
     setmodal2(true);
     setTimeout(() => {
       setmodal2(false);
     }, 3000);
+  };
+
+  const getTodayLog = async () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const tanggal = `${year}-${month}-${day}`;
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/get-log", {
+        username,
+        tanggal,
+      });
+      setMasuk(response.data.log.masuk);
+      console.log(masuk);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const updateProgressAndTime = () => {
@@ -65,7 +87,7 @@ export default function Home() {
 
   useEffect(() => {
     const intervalId = setInterval(updateProgressAndTime, 1000);
-
+    getTodayLog();
     return () => clearInterval(intervalId);
   }, []);
 
@@ -122,6 +144,209 @@ export default function Home() {
   const [bgColorkem, setbgColorKem] = useState("bg-gray-300");
   const [bgColorPulang, setBgColorPulang] = useState("bg-gray-300");
 
+  const logout = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/logout", {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Server responded with an error:", errorDetails);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log("Success:", result.message);
+        router.push("/user/login");
+      } else {
+        throw new Error(result.message || "Gagal Logout");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const addMasuk = async () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
+
+    const waktu = `${hours}:${minutes}:${seconds}`;
+    const tanggal = `${year}-${month}-${day}`;
+    const data = {
+      username: username,
+      tanggal: tanggal,
+      masuk: waktu,
+    };
+
+    try {
+      console.log(JSON.stringify(data));
+      const response = await fetch("http://127.0.0.1:8000/presensi-masuk", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Server responded with an error:", errorDetails);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log("Success:", result.message);
+      } else {
+        throw new Error(result.message || "Masuk Gagal");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const addIstirahat = async () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
+
+    const waktu = `${hours}:${minutes}:${seconds}`;
+    const tanggal = `${year}-${month}-${day}`;
+    const data = {
+      username: username,
+      tanggal: tanggal,
+      istirahat: waktu,
+    };
+
+    try {
+      console.log(JSON.stringify(data));
+      const response = await fetch("http://127.0.0.1:8000/presensi-istirahat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Server responded with an error:", errorDetails);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log("Success:", result.message);
+      } else {
+        throw new Error(result.message || "Istirahat Gagal");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const addKembali = async () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
+
+    const waktu = `${hours}:${minutes}:${seconds}`;
+    const tanggal = `${year}-${month}-${day}`;
+    const data = {
+      username: username,
+      tanggal: tanggal,
+      kembali: waktu,
+    };
+
+    try {
+      console.log(JSON.stringify(data));
+      const response = await fetch("http://127.0.0.1:8000/presensi-kembali", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Server responded with an error:", errorDetails);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log("Success:", result.message);
+      } else {
+        throw new Error(result.message || "Kembali Gagal");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const addPulang = async () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
+
+    const waktu = `${hours}:${minutes}:${seconds}`;
+    const tanggal = `${year}-${month}-${day}`;
+    const data = {
+      username: username,
+      tanggal: tanggal,
+      pulang: waktu,
+    };
+
+    try {
+      console.log(JSON.stringify(data));
+      const response = await fetch("http://127.0.0.1:8000/presensi-pulang", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Server responded with an error:", errorDetails);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log("Success:", result.message);
+      } else {
+        throw new Error(result.message || "Pulang Gagal");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handleSimpanClick = () => {
     const currentTime = new Date().toLocaleTimeString();
     const shiftPagiStart = new Date();
@@ -148,6 +373,7 @@ export default function Home() {
       } else {
         setTerlambat(null);
       }
+      addMasuk();
       setCurrentButton("Istirahat");
       setMasukTime(currentTime);
     } else if (currentButton === "Istirahat") {
@@ -377,12 +603,12 @@ export default function Home() {
                   >
                     Tidak
                   </button>
-                  <a
-                    href="/user/login"
+                  <button
                     className="bg-h1 py-1 px-5 rounded-md text-white"
+                    onClick={logout}
                   >
                     Ya
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             </motion.div>
@@ -406,7 +632,7 @@ export default function Home() {
                 </div>
 
                 <i className="md:text-3xl mx-auto text-center">
-                &quot; Sudahkah Anda Istighfar Hari Ini &quot;
+                  &quot; Sudahkah Anda Istighfar Hari Ini &quot;
                 </i>
 
                 <div className="flex justify-between items-center">
@@ -417,7 +643,7 @@ export default function Home() {
 
                     <div>
                       <p className="text-sm md:text-2xl font-semibold">
-                        ${nama}
+                        {nama}
                       </p>
                       <p className="pr-10 text-[12px] font-thin md:text-lg">
                         MJ/FE/POLINES/AGSTS2023/7
@@ -467,8 +693,7 @@ export default function Home() {
               </div>
 
               <div className=" grid grid-cols-1  mx-auto">
-                <div className="hidden md:flex text-h1 font-bold   justify-end  pb-5  ">
-                </div>
+                <div className="hidden md:flex text-h1 font-bold   justify-end  pb-5  "></div>
 
                 <div className=" flex flex-wrap gap-12 text-[10%] mx-5 pb-10   h-fit md:pb-0 md:mx-0  ">
                   <div className="content relative  h-full rounded-lg   ">
@@ -652,9 +877,7 @@ export default function Home() {
                   </span>
 
                   <div>
-                    <p className="text-sm md:text-2xl font-semibold">
-                      {nama}
-                    </p>
+                    <p className="text-sm md:text-2xl font-semibold">{nama}</p>
                     <p className="pr-10 text-[12px] font-thin md:text-lg">
                       MJ/FE/POLINES/AGSTS2023/7
                     </p>
