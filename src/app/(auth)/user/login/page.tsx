@@ -1,12 +1,13 @@
 'use client'
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Logo from '@/assets/logo.png'
 
 export default function Login() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -16,19 +17,21 @@ export default function Login() {
     const handleLogin = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://ab19-103-3-220-26.ngrok-free.app/api/login', {
+            const response = await axios.post('http://127.0.0.1:8000/login', {
                 email,
                 password,
             });
 
             if (response.status === 200) {
-                const admin = response.data;
-                const token = response.data.token;
-                localStorage.setItem('jwtToken', token);
-                console.log('berhasil login')
+                const username = response.data.username;
+                const nama = response.data.nama;
+                localStorage.setItem('username', username);
+                localStorage.setItem('nama', nama);
+                console.log('berhasil login');
+                router.push('/')
 
             } else {
-                console.error('token gagal');
+                console.error('gagal login');
             }
         } catch (error) {
             console.error('Gagal login:', error);
@@ -69,7 +72,7 @@ export default function Login() {
                     </h2>
                     <div className='flex flex-col gap-5 w-full'>
                         <div className='flex flex-col gap-4 rounded-xl'>
-                            <label htmlFor='email'>Username/Email</label>
+                            <label htmlFor='email'>Email</label>
                             <input
                                 type='text'
                                 id='email'
@@ -93,18 +96,13 @@ export default function Login() {
                             />
                         </div>
                         <div className='flex justify-between w-full text-[19px]'>
-                            <div className='flex gap-2 items-center'>
-                                <input type='checkbox' name='rememberMe' id='rememberMe' className='h-4 w-4' />
-                                <label htmlFor='rememberMe'>Ingatkan Saya</label>
-                            </div>
                             <div className='flex gap-2'>
                                 <label htmlFor='forgotPassword'>Lupa Kata Sandi?</label>
                                 <a href='/verifikasi' className='text-[#660708] font-semibold hover:scale-[1.05] duration-150 transition-all'>Reset</a>
                             </div>
                         </div>
                     </div>
-                    <a href="/"  className='bg-grey text-center text-white text-lg p-3 rounded-md w-[194px] mx-auto my-10 hover:bg-[#660708] transition-all duration-150'>Login</a>
-                    {/* <button type='submit' className='bg-grey text-center text-white text-lg p-3 rounded-md w-[194px] mx-auto my-10 hover:bg-[#660708] transition-all duration-150'>Login</button> */}
+                    <button type='button' onClick={handleLogin}  className='bg-grey text-center text-white text-lg p-3 rounded-md w-[194px] mx-auto my-10 hover:bg-[#660708] transition-all duration-150'>Login</button>
                     <div className='flex gap-2 mx-auto'>
                         <p>Belum Punya Akun?</p>
                         <Link href='/user/register' className='text-[#660708] font-bold hover:scale-[1.05] duration-150 transition-all'>Daftar</Link>
