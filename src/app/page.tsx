@@ -14,19 +14,62 @@ export default function Home() {
   const [modalIzin, setModalIzin] = useState(false);
   const [modalMasuk, setModalMasuk] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [masuk, setMasuk] = useState("");
   const [time, setTime] = useState("00:00:00");
+  const [currentButton, setCurrentButton] = useState("Masuk");
+  const [masukTime, setMasukTime] = useState<string | null>("---");
+  const [istirahatTime, setIstirahatTime] = useState<string | null>("---");
+  const [masukKembaliTime, setMasukKembaliTime] = useState<string | null>(
+    "---"
+  );
+  const [pulangTime, setPulangTime] = useState<string | null>("---");
+  const [kebaikan, setKebaikan] = useState("");
+  const [logActivity, setLogActivity] = useState("");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
   const nama = localStorage.getItem("nama");
   const username = localStorage.getItem("username");
   const router = useRouter();
 
-  const handdleofclickmod2 = () => {
-    setmodal2(true);
-    setTimeout(() => {
-      setmodal2(false);
-    }, 3000);
+  const handdleofclickmod2 = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const tanggal = `${year}-${month}-${day}`;
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/kebaikan", {
+        username: username,
+        tanggal: tanggal,
+        kebaikan: kebaikan,
+      });
+      setmodal2(true);
+      setTimeout(() => {
+        setmodal2(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Gagal input kebaikan:", error);
+    }
+  };
+
+  const addLogActivity = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+    const day = String(today.getDate()).padStart(2, "0");
+    const tanggal = `${year}-${month}-${day}`;
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/log-activity", {
+        username: username,
+        tanggal: tanggal,
+        log_activity: logActivity,
+      });
+      console.log("Sukses");
+      handleIzin();
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   };
 
   const getTodayLog = async () => {
@@ -40,8 +83,28 @@ export default function Home() {
         username,
         tanggal,
       });
-      setMasuk(response.data.log.masuk);
-      console.log(masuk);
+      if (response.data.log.masuk) {
+        setCurrentButton("Istirahat");
+        setMasukTime(response.data.log.masuk);
+      }
+      if (response.data.log.istirahat) {
+        setCurrentButton("Masuk Kembali");
+        setIstirahatTime(response.data.log.istirahat);
+      }
+      if (response.data.log.kembali) {
+        setCurrentButton("Pulang");
+        setMasukKembaliTime(response.data.log.kembali);
+      }
+      if (response.data.log.pulang) {
+        setCurrentButton("Sudah Klik Pulang");
+        setPulangTime(response.data.log.pulang);
+      }
+      if (response.data.log.kebaikan) {
+        setKebaikan(response.data.log.kebaikan);
+      }
+      if (response.data.log.log_activity) {
+        setLogActivity(response.data.log.log_activity);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -128,13 +191,6 @@ export default function Home() {
     // Implementasi untuk menutup popup
   };
   // record time
-  const [currentButton, setCurrentButton] = useState("Masuk");
-  const [masukTime, setMasukTime] = useState<string | null>("---");
-  const [istirahatTime, setIstirahatTime] = useState<string | null>("---");
-  const [masukKembaliTime, setMasukKembaliTime] = useState<string | null>(
-    "---"
-  );
-  const [pulangTime, setPulangTime] = useState<string | null>("---");
   const [input, setInput] = useState(" ");
   const [keterangan, setKeterangan] = useState<{ [key: string]: string }>({});
   const [isBlinking, setIsBlinking] = useState(true);
@@ -204,7 +260,7 @@ export default function Home() {
 
       const result = await response.json();
 
-      if (response.ok && result.success) {
+      if (response.ok) {
         console.log("Success:", result.message);
       } else {
         throw new Error(result.message || "Masuk Gagal");
@@ -249,7 +305,7 @@ export default function Home() {
 
       const result = await response.json();
 
-      if (response.ok && result.success) {
+      if (response.ok) {
         console.log("Success:", result.message);
       } else {
         throw new Error(result.message || "Istirahat Gagal");
@@ -293,7 +349,7 @@ export default function Home() {
 
       const result = await response.json();
 
-      if (response.ok && result.success) {
+      if (response.ok) {
         console.log("Success:", result.message);
       } else {
         throw new Error(result.message || "Kembali Gagal");
@@ -337,7 +393,7 @@ export default function Home() {
 
       const result = await response.json();
 
-      if (response.ok && result.success) {
+      if (response.ok) {
         console.log("Success:", result.message);
       } else {
         throw new Error(result.message || "Pulang Gagal");
@@ -382,7 +438,7 @@ export default function Home() {
       } else {
         setBgColorInstirahat("bg-gray-300");
       }
-
+      addIstirahat();
       setCurrentButton("Masuk Kembali");
       setIstirahatTime(currentTime);
     } else if (currentButton === "Masuk Kembali") {
@@ -391,6 +447,7 @@ export default function Home() {
       } else {
         setbgColorKem("bg-gray-300");
       }
+      addKembali();
       setCurrentButton("Pulang");
       setMasukKembaliTime(currentTime);
     } else if (currentButton === "Pulang") {
@@ -399,6 +456,7 @@ export default function Home() {
       } else {
         setBgColorPulang("bg-gray-300");
       }
+      addPulang();
       setCurrentButton("Sudah Klik Pulang");
       setPulangTime(currentTime);
     }
@@ -545,6 +603,10 @@ export default function Home() {
                     id=""
                     placeholder="Apa yang telah anda lakukan hari ini"
                     className="resize-none h-[300px] rounded-lg focus:outline-none bg-grey/10 border-2 p-2"
+                    value={logActivity}
+                    onChange={(e) => {
+                      setLogActivity(e.target.value);
+                    }}
                   ></textarea>
                   <p className="text-xs text-button">
                     Note : Jangan lupa submit sebelum memencet tombol pulang
@@ -554,7 +616,7 @@ export default function Home() {
                 <div className="flex justify-end pt-10">
                   <button
                     className="bg-button rounded-md px-10 py-2 text-white hover:scale-[1.03] transition-all duration-150"
-                    onClick={handleIzin}
+                    onClick={addLogActivity}
                   >
                     Submit
                   </button>
@@ -812,6 +874,10 @@ export default function Home() {
                       id=""
                       className="resize-none bg-grey/10 rounded-lg  h-[129.761px]  focus:outline-none p-2 text-[16px]"
                       placeholder="Tambahkan kebaikan apa hari ini yang telah anda lakukan"
+                      value={kebaikan}
+                      onChange={(e) => {
+                        setKebaikan(e.target.value);
+                      }}
                     />
                     <div className="flex text-[17px] justify-end gap-4">
                       <button
