@@ -14,6 +14,7 @@ export default function Home() {
   const [modalIzin, setModalIzin] = useState(false);
   const [modalMasuk, setModalMasuk] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [logs, setLogs] = useState([]);
   const [time, setTime] = useState("00:00:00");
   const [currentButton, setCurrentButton] = useState("Masuk");
   const [masukTime, setMasukTime] = useState<string | null>("---");
@@ -110,6 +111,20 @@ export default function Home() {
     }
   };
 
+  const getLogs = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/get-logs", {
+        username,
+      });
+      if (response.data.logs) {
+        setLogs(response.data.logs);
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const updateProgressAndTime = () => {
     const now = new Date();
 
@@ -151,6 +166,7 @@ export default function Home() {
   useEffect(() => {
     const intervalId = setInterval(updateProgressAndTime, 1000);
     getTodayLog();
+    getLogs();
     return () => clearInterval(intervalId);
   }, []);
 
@@ -1018,7 +1034,7 @@ export default function Home() {
               </motion.div>
             </motion.div>
           )}
-          <Table openEdit={openEdit} />
+          <Table openEdit={openEdit} logs={logs} />
         </div>
       )}
     </AnimatePresence>
@@ -1029,8 +1045,13 @@ interface tableProps {
 }
 interface tableProps2 {
   openEdit: () => void;
+  logs: Array<{
+    id: number;
+    tanggal: string;
+    log_activity: string;
+  }>;
 }
-function Table({ openEdit }: tableProps2) {
+function Table({ openEdit, logs }: tableProps2) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -1055,268 +1076,72 @@ function Table({ openEdit }: tableProps2) {
     <div className="items-center justify-center mt-2 mb-5 px-5">
       <div>
         {/* Menyembunyikan tabel jika tampilan mobile */}
-        <table
-          className={`border-collapse rounded-md border border-[#cfcece] bg-[#e9e9e9] ${
-            isMobile ? "hidden" : ""
-          } w-full`}
-        >
-          <thead className="bg-white border-b-2 border-[#cfcece]">
-            <tr>
-              <th className="p-2 text-center ">No</th>
-              <th className="p-2 text-center ">Tanggal</th>
-              <th className="p-2 text-center ">Activity Log</th>
-              <th className="p-2 text-center ">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="p-2 text-center  text-slate-500">1</td>
-              <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
-              <td className="p-2 pl-2  text-slate-500">
-                Kucing saya kecelakaan karena tertabrak mobil
-              </td>
-              <th className="p-2 text-center ">
+        {logs.length > 0 && (
+          <table
+            className={`border-collapse rounded-md border border-[#cfcece] bg-[#e9e9e9] ${
+              isMobile ? "hidden" : ""
+            } w-full`}
+          >
+            <thead className="bg-white border-b-2 border-[#cfcece]">
+              <tr>
+                <th className="p-2 text-center ">No</th>
+                <th className="p-2 text-center ">Tanggal</th>
+                <th className="p-2 text-center ">Activity Log</th>
+                <th className="p-2 text-center ">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {logs.map((item, index) => (
+                <tr key={item.id}>
+                  <td className="p-2 text-center  text-slate-500">
+                    {index + 1}
+                  </td>
+                  <td className="p-2 text-center   text-slate-500">
+                    {item.tanggal}
+                  </td>
+                  <td className="p-2 pl-2  text-slate-500">
+                    {item.log_activity}
+                  </td>
+                  <th className="p-2 text-center ">
+                    <button
+                      className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
+                      onClick={openEdit}
+                    >
+                      Edit
+                    </button>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {/* Menampilkan kartu jika tampilan mobile */}
+        {logs.length > 0 && (
+          <div className={`flex flex-col ${isMobile ? "" : "hidden"}`}>
+            {logs.map((item) => (
+              <div
+                className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3"
+                key={item.id}
+              >
+                <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
+                  <p>{item.tanggal}</p>
+                </div>
+
+                <p className="text-sm">Keterangan :</p>
+                <p className="text-sm">{item.log_activity}</p>
+
                 <button
-                  className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
+                  className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
                   onClick={openEdit}
                 >
                   Edit
                 </button>
-              </th>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            ))}
 
-        {/* Menampilkan kartu jika tampilan mobile */}
-        <div className={`flex flex-col ${isMobile ? "" : "hidden"}`}>
-          <div className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3">
-            <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
-              <p>12 Februari 2024</p>
-              <p className="text-center p-1 rounded-lg text-xs text-red-600 font-bold w-[100px]">
-                Rejected
-              </p>
-            </div>
-
-            <p className="text-sm">Keterangan :</p>
-            <p className="text-sm">
-              Kucing saya kecelakaan karena tertabrak mobil
-            </p>
-
-            <button
-              className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-              onClick={openEdit}
-            >
-              Edit
-            </button>
+            {/* ... (tambahkan kartu lain sesuai kebutuhan) */}
           </div>
-          <div className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3">
-            <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
-              <p>12 Februari 2024</p>
-              <p className="text-center p-1 rounded-lg text-xs text-red-600 font-bold w-[100px]">
-                Rejected
-              </p>
-            </div>
-
-            <p className="text-sm">Keterangan :</p>
-            <p className="text-sm">
-              Kucing saya kecelakaan karena tertabrak mobil
-            </p>
-
-            <button
-              className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-              onClick={openEdit}
-            >
-              Edit
-            </button>
-          </div>
-          <div className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3">
-            <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
-              <p>12 Februari 2024</p>
-              <p className="text-center p-1 rounded-lg text-xs text-red-600 font-bold w-[100px]">
-                Rejected
-              </p>
-            </div>
-
-            <p className="text-sm">Keterangan :</p>
-            <p className="text-sm">
-              Kucing saya kecelakaan karena tertabrak mobil
-            </p>
-
-            <button
-              className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-              onClick={openEdit}
-            >
-              Edit
-            </button>
-          </div>
-
-          {/* ... (tambahkan kartu lain sesuai kebutuhan) */}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TableGanti({ openBukti }: tableProps) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Fungsi untuk mengecek apakah lebar layar kurang dari 768px (atau ukuran yang diinginkan)
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 600);
-    };
-
-    // Jalankan fungsi saat komponen pertama kali di-mount
-    checkIfMobile();
-
-    // Daftarkan event listener untuk memantau perubahan ukuran layar
-    window.addEventListener("resize", checkIfMobile);
-
-    // Membersihkan event listener saat komponen di-unmount
-    return () => {
-      window.removeEventListener("resize", checkIfMobile);
-    };
-  }, []);
-
-  return (
-    <div className="items-center justify-center mt-2 mb-5 px-5">
-      <div>
-        {/* Menyembunyikan tabel jika tampilan mobile */}
-        <table
-          className={`border-collapse rounded-md border border-[#cfcece] bg-[#e9e9e9] ${
-            isMobile ? "hidden" : ""
-          } w-full`}
-        >
-          <thead className="bg-white border-b-2 border-[#cfcece]">
-            <tr>
-              <th className="p-2 text-center ">No</th>
-              <th className="p-2 text-center ">Hari</th>
-              <th className="p-2 text-center ">Keterangan Izin</th>
-              <th className="p-2 text-center ">Status</th>
-              <th className="p-2 text-center ">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="p-2 text-center  text-slate-500">1</td>
-              <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
-              <td className="p-2 pl-2  text-slate-500">
-                Kucing saya kecelakaan karena tertabrak mobil
-              </td>
-              <td className="p-2 text-center   text-red-500 font-bold">
-                Ganti Jam
-              </td>
-              <th className="p-2 text-center ">
-                <button
-                  className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
-                  onClick={openBukti}
-                >
-                  Lihat Bukti
-                </button>
-              </th>
-            </tr>
-            <tr className="bg-white">
-              <td className="p-2 text-center  text-slate-500">2</td>
-              <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
-              <td className="p-2 pl-2  text-slate-500">Sedang terkena Flu</td>
-              <td className="p-2 text-center   text-red-500 font-bold">
-                Ganti Jam
-              </td>
-              <th className="p-2 text-center ">
-                <button
-                  className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
-                  onClick={openBukti}
-                >
-                  Lihat Bukti
-                </button>
-              </th>
-            </tr>
-            <tr>
-              <td className="p-2  text-center  text-slate-500">3</td>
-              <td className="p-2 text-center   text-slate-500">13 Juli 2022</td>
-              <td className="p-2 pl-2  text-slate-500">
-                Mengantarkan orang tua umroh
-              </td>
-              <td className="p-2 text-center   text-red-500 font-bold">
-                Ganti Jam
-              </td>
-              <th className="p-2 text-center ">
-                <button
-                  className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
-                  onClick={openBukti}
-                >
-                  Lihat Bukti
-                </button>
-              </th>
-            </tr>
-          </tbody>
-        </table>
-
-        {/* Menampilkan kartu jika tampilan mobile */}
-        <div className={`flex flex-col ${isMobile ? "" : "hidden"}`}>
-          <div className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3">
-            <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
-              <p>12 Februari 2024</p>
-              <p className="text-center p-1 rounded-lg text-xs text-red-600 font-bold w-[100px]">
-                Ganti Jam
-              </p>
-            </div>
-
-            <p className="text-sm">Keterangan :</p>
-            <p className="text-sm">
-              Kucing saya kecelakaan karena tertabrak mobil
-            </p>
-
-            <button
-              className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-              onClick={openBukti}
-            >
-              Lihat Bukti
-            </button>
-          </div>
-          <div className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3">
-            <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
-              <p>12 Februari 2024</p>
-              <p className="text-center p-1 rounded-lg text-xs text-red-600 font-bold w-[100px]">
-                Ganti Jam
-              </p>
-            </div>
-
-            <p className="text-sm">Keterangan :</p>
-            <p className="text-sm">
-              Kucing saya kecelakaan karena tertabrak mobil
-            </p>
-
-            <button
-              className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-              onClick={openBukti}
-            >
-              Lihat Bukti
-            </button>
-          </div>
-          <div className="border rounded-md bg-cyan-100 p-2 border-cyan-500 mb-4 mx-3">
-            <div className="text-xs border-b border-blue-600 pb-2 mb-1 flex items-center justify-between">
-              <p>12 Februari 2024</p>
-              <p className="text-center p-1 rounded-lg text-xs text-red-600 font-bold w-[100px]">
-                Ganti Jam
-              </p>
-            </div>
-
-            <p className="text-sm">Keterangan :</p>
-            <p className="text-sm">
-              Kucing saya kecelakaan karena tertabrak mobil
-            </p>
-
-            <button
-              className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-              onClick={openBukti}
-            >
-              Lihat Bukti
-            </button>
-          </div>
-
-          {/* ... (tambahkan kartu lain sesuai kebutuhan) */}
-        </div>
+        )}
       </div>
     </div>
   );
