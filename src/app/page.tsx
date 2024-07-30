@@ -216,6 +216,7 @@ export default function Home() {
 
       if (response.ok && result.success) {
         console.log("Success:", result.message);
+        localStorage.clear();
         router.push("/user/login");
       } else {
         throw new Error(result.message || "Gagal Logout");
