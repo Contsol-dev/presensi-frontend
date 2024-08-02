@@ -27,9 +27,14 @@ export default function Home() {
   const [logActivity, setLogActivity] = useState("");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
+  const router = useRouter();
+
   const nama = localStorage.getItem("nama");
   const username = localStorage.getItem("username");
-  const router = useRouter();
+
+  if (!nama || !username) {
+    router.push("/user/login");
+  }
 
   const handdleofclickmod2 = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -476,6 +481,7 @@ export default function Home() {
       addPulang();
       setCurrentButton("Sudah Klik Pulang");
       setPulangTime(currentTime);
+      setIsButtonHidden(true);
     }
 
     setKeterangan((prevKeterangan) => ({
@@ -513,6 +519,7 @@ export default function Home() {
   const handleLog = () => {
     setUser((user = false));
     setLog((log = true));
+    getLogs();
   };
   const handBuatlog = () => {
     setBuat((user = false));
