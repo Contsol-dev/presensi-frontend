@@ -1,5 +1,5 @@
 import React from "react";
-import "src/styleInvoice/style.css";
+import "@/styleInvoice/style.css";
 
 const rowNumbers = Array.from({ length: 15 }, (_, index) => index + 1);
 const Invoice = () => {
