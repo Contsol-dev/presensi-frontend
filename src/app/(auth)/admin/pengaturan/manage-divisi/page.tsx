@@ -259,6 +259,11 @@ function Table({ data, setData }: any) {
     return pageNumbers;
   };
 
+  const handlePenilaian = (divisi_id: any) => {
+    localStorage.setItem('divisi_id', divisi_id);
+    window.location.href = '/admin/pengaturan/manage-divisi/penilaian';
+  }
+
   return (
     <>
       <div className="flex gap-4">
@@ -322,9 +327,9 @@ function Table({ data, setData }: any) {
                   </td>
                   <td className="px-2 py-2 text-center">
                     <div className="flex justify-center items-center">
-                      <a href="/admin/pengaturan/manage-divisi/penilaian">
+                      <button onClick={() => handlePenilaian(dataDivisi.id)}>
                         <BsCardText width={30} style={{ color: "green" }} />
-                      </a>
+                      </button>
                     </div>
                   </td>
                   <td className="px-2 py-2 text-center">
