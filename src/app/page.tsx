@@ -29,8 +29,8 @@ export default function Home() {
   const [modal2, setmodal2] = useState(false);
   const router = useRouter();
 
-  const nama = localStorage.getItem("nama");
-  const username = localStorage.getItem("username");
+  const nama = sessionStorage.getItem("nama");
+  const username = sessionStorage.getItem("username");
 
   if (!nama || !username) {
     router.push("/user/login");

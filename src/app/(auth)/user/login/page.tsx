@@ -26,8 +26,8 @@ export default function Login() {
       if (response.status === 200) {
         const username = response.data.username;
         const nama = response.data.nama;
-        localStorage.setItem("username", username);
-        localStorage.setItem("nama", nama);
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("nama", nama);
         console.log("berhasil login");
         const today = new Date();
         const year = today.getFullYear();

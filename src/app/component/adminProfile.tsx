@@ -1,14 +1,42 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BiBell } from "react-icons/bi";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 export default function AdminProfile() {
+  const router = useRouter();
   const [dotNotif, setDotNotif] = useState(true);
   const [modalNotif, setModalNotif] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState("/avatar1.jpg");
   const handleClickNotif = () => {
     setDotNotif(false);
     setModalNotif(!modalNotif);
   };
+  const id = sessionStorage.getItem("id");
+  const nama = sessionStorage.getItem("nama");
+
+  if (!id || !nama) {
+    router.push("/admin/login");
+  }
+
+  const fecthProfile = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/admin/profile/" + id
+      );
+      const nama = response.data.profile.nama;
+      const email = response.data.profile.email;
+      const photo = response.data.profile.photo;
+      setAvatarUrl(photo);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fecthProfile();
+  }, []);
 
   return (
     <>
@@ -32,12 +60,12 @@ export default function AdminProfile() {
           </span>
         )}
         <div className="text-end ">
-          <b>Alpin Yuda</b>
+          <b>{nama}</b>
           <p>Admin</p>
         </div>
         <Link href="/admin/edit-profile">
           <img
-            src="/profil.png"
+            src={avatarUrl}
             alt=""
             className="h-[69px] w-[69px] rounded-full"
           />
