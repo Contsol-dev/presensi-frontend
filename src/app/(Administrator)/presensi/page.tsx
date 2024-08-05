@@ -30,6 +30,9 @@ export default function Presensi() {
   const [presensi, setPresensi] = useState(true);
   const [barcodePresensi, setBarcodePresensi] = useState(false);
   const [cekInvoice, setCekInvoice] = useState(false);
+  const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleBarcode = () => {
     setPresensi(!presensi);
@@ -43,6 +46,15 @@ export default function Presensi() {
     setPresensi(!presensi);
     setCekInvoice(!cekInvoice);
   };
+  const handleInvoiceClick = (search: string, filter: string) => {
+    setFilter(filter);
+    setSearch(search);
+    handleInvoice();
+  };
+  const handleUsername = (username: string) => {
+    setUsername(username);
+    handleDetailP();
+  };
 
   return (
     <div>
@@ -54,8 +66,8 @@ export default function Presensi() {
             {detailP == false && (
               <Header
                 handleBarcode={handleBarcode}
-                handleDetailP={handleDetailP}
-                handleInvoice={handleInvoice}
+                handleDetailP={handleUsername}
+                handleInvoice={handleInvoiceClick}
               />
             )}
 
@@ -64,7 +76,7 @@ export default function Presensi() {
                 <p className="text-lg cursor-pointer" onClick={handleDetailP}>
                   <IoIosArrowBack />
                 </p>
-                <DetailPresensi />
+                <DetailPresensi username={username} />
               </div>
             )}
           </div>
@@ -89,7 +101,7 @@ export default function Presensi() {
           >
             <IoIosArrowBack />
           </p>
-          <Invoice />
+          <Invoice filter={filter} search={search} />
         </div>
       )}
     </div>
@@ -99,8 +111,8 @@ export default function Presensi() {
 // Header presensi
 interface headerProps {
   handleBarcode: () => void;
-  handleDetailP: () => void;
-  handleInvoice: () => void;
+  handleDetailP: (username: string) => void;
+  handleInvoice: (search: string, filter: string) => void;
 }
 
 function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
@@ -147,6 +159,15 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
   const handlePrint = () => {
     window.print();
   };
+
+  const handleInvoiceClick = () => {
+    handleInvoice(search, filter);
+  };
+
+  const handleUsername = (username: string) => {
+    handleDetailP(username);
+  };
+
   return (
     <>
       <div className="bg-[#404040] text-white text-sm lg:text-sm py-3 px-5 font-inter">
@@ -215,12 +236,12 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
         </div>
         <TablePresensi
           filter={filter}
-          handleDetailP={handleDetailP}
+          handleDetailP={handleUsername}
           search={search}
         />
         <p
           className="flex gap-1 justify-center items-center text-[10px] rounded-sm text-center font-inter py-1 px-2 mt-3 bg-button text-white w-[60px] cursor-pointer"
-          onClick={handleInvoice}
+          onClick={handleInvoiceClick}
         >
           <span>
             <LiaDownloadSolid />
@@ -315,9 +336,10 @@ function DatePicker({
 interface TablePresensiProps {
   filter: string;
   search: string;
-  handleDetailP: () => void;
+  handleDetailP: (username: string) => void;
 }
 interface PresensiData {
+  username: string;
   nama: string;
   masuk: string;
   pulang: string;
@@ -382,6 +404,10 @@ function TablePresensi({ filter, search, handleDetailP }: TablePresensiProps) {
     setKIzinAktif(!kIzinAktif);
   };
 
+  const handleUsername = (username: string) => {
+    handleDetailP(username);
+  };
+
   return (
     <div>
       <table className="text-[10px] table-auto border-collapse items-center mt-2  border border-solid border-[#b5b5b5] rounded-t-md bg-[#F2F4F8] w-full">
@@ -431,7 +457,10 @@ function TablePresensi({ filter, search, handleDetailP }: TablePresensiProps) {
                 <input type="checkbox" />
               </td>
               <td className=" pt-1 text-center">{index + 1}</td>
-              <td className=" cursor-pointer pt-1" onClick={handleDetailP}>
+              <td
+                className=" cursor-pointer pt-1"
+                onClick={() => handleUsername(item.username)}
+              >
                 {item.nama}
               </td>
               <td className="text-center text-blue-600 underline underline-offset-1">
