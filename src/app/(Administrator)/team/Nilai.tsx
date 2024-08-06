@@ -65,5 +65,102 @@ export default function Nilai({ username, divisi_id }) {
             </div>
             </form>
         </div>
-        );
-    }
+        <div className="flex font-inter flex-col text-xs p-2 gap-1">
+          <p className="font-bold">Syalita Widyandini</p>
+          <p>NIP : MJ/UI/UX/POLINES/AGST2023/06</p>
+        </div>
+      </div>
+      <div className="flex items-center justify-center p-3 bg-[#eeeded]">
+        <h1 className="font-bold font-inter text-sm">INPUT NILAI MAGANG</h1>
+      </div>
+      <form className="bg-[#eeeded] px-10 text-xs text-[#00000099]">
+        <div className="pb-5 px-2 flex flex-wrap font-inter text-xs  gap-5 justify-between">
+          <div className="basis-[45%] ">
+            <p className="font-bold">Pengetahuan</p>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Desain Thinking</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Pemahaman penerapan Desain</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+          </div>
+          <div className="basis-[45%]">
+            <p className="font-bold">Lainnya</p>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Aktif Presentasi</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Kejujuran</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Kedeisiplinan</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Tanggung Jawab</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md`````````````````"
+              />
+            </span>
+          </div>
+          <div className="basis-[45%]">
+            <p className="font-bold">Keterampilan</p>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Desain Yang Menarik</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Pemecahan Masalah</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+            <span className="flex mt-2 justify-between">
+              <p className="mr-2">Pemecahan Masalah</p>
+              <input
+                type="text"
+                className="w-[30%] border border-solid border-1 border-black rounded-md"
+              />
+            </span>
+          </div>
+        </div>
+        <div className="p-2">
+          <p>Kritik & Saran</p>
+          <input
+            type="text"
+            className="w-full h-16 mt-2 border border-solid border-1 border-black rounded-md"
+          />
+        </div>
+        <div className="flex items-center justify-center py-5">
+          <button className="bg-[#A4161A] rounded-md text-xs text-white p-1">
+            Simpan
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

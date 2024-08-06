@@ -5,6 +5,7 @@ import "@/styleInvoice/style.css";
 interface InvoiceProps {
   filter: string;
   search: string;
+  tanggal: string;
 }
 interface PresensiData {
   nama: string;
@@ -23,7 +24,7 @@ const today = new Date().toLocaleDateString("id-ID", {
   year: "numeric",
 });
 
-const Invoice = ({ filter, search }: InvoiceProps) => {
+const Invoice = ({ filter, search, tanggal }: InvoiceProps) => {
   const [data, setData] = useState<PresensiData[]>([]);
 
   const fetchPresensi = async () => {
@@ -33,6 +34,7 @@ const Invoice = ({ filter, search }: InvoiceProps) => {
         {
           filter: filter,
           nama: search,
+          tanggal: tanggal,
         }
       );
       console.log(response.data);
