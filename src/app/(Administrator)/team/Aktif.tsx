@@ -36,6 +36,8 @@ export default function Aktif() {
     divisi_id: number
   ) => {
     setPilihan(stat);
+    setUsername(username);
+    setDivisiId(divisi_id);
   };
 
   const handleDivisiClick = (namaDivisi: string) => {
@@ -198,7 +200,7 @@ export default function Aktif() {
             </svg>
           </div>
           <div>
-            <Nilai />
+            <Nilai username={username} divisi_id={divisiId} />
           </div>
         </div>
       )}
