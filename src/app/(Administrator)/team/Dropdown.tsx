@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from "react";
 interface DropdownProps {
   items: string[];
   updatePilihan1: (stat: string) => void;
-  updatePilihan2: (stat: string) => void;
+  updatePilihan2: (stat: string, username: string, divisi_id: number) => void;
+  handleInvoice: (username: string) => void;
   username: string;
   divisi_id: number;
 }
@@ -12,12 +13,17 @@ export default function Dropdown({
   items,
   updatePilihan1,
   updatePilihan2,
+  handleInvoice,
   username,
   divisi_id,
 }: DropdownProps) {
   const handlePilihan1Change = () => {
     const stat = "sunting";
     updatePilihan1(stat);
+  };
+
+  const handleInvoiceClick = () => {
+    handleInvoice(username);
   };
 
   const handlePilihan2Change = () => {
@@ -75,10 +81,10 @@ export default function Dropdown({
       {isOpen && (
         <ul className="absolute left-0 mt-1 py-0 px-0 bg-neutral-200 border-gray-300 rounded shadow z-40 w-600">
           <li className="text-xs py-2 px-4 cursor-pointer hover:bg-gray-100">
-            <p onClick={handlePilihan1Change}>Sunting</p>
+            <p onClick={handlePilihan2Change}>Penilaian</p>
           </li>
           <li className="text-xs py-2 px-4 cursor-pointer hover:bg-gray-100">
-            <p onClick={handlePilihan2Change}>Penilaian</p>
+            <p onClick={handleInvoiceClick}>Download Nilai</p>
           </li>
           <li className="text-xs text-red-700 py-2 px-4 cursor-pointer hover:bg-gray-100">
             <p>Hapus</p>

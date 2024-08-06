@@ -104,7 +104,10 @@ export default function Contents({
       <div className="flex flex-wrap ml-2">{DivisionElements}</div>
       <div>
         <p
-          onClick={handlePilihanChange}
+          onClick={() => {
+            handlePilihanChange();
+            handleDivisiClick("all");
+          }}
           className="p-5 mt-2 text-red-700 font-bold font-inter cursor-pointer"
         >
           See all teams...
