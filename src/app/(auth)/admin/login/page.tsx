@@ -1,14 +1,48 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function AdminLogin() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const togglePasswordVisibility = () => {
     setHidePassword(!hidePassword);
+  };
+
+  const handleLogin = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/admin/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        const id = response.data.id;
+        const nama = response.data.nama;
+        sessionStorage.setItem("id", id);
+        sessionStorage.setItem("nama", nama);
+        console.log("berhasil login");
+        router.push("/admin/dashboard");
+      } else {
+        console.error("gagal login");
+      }
+    } catch (error) {
+      console.error("Gagal login:", error);
+      setErrorMessage("Username atau password salah");
+      setIsError(true);
+      setHidePassword(false);
+      setTimeout(() => {
+        setIsError(false);
+      }, 5000);
+    }
   };
 
   return (
@@ -84,12 +118,13 @@ export default function AdminLogin() {
                 </div>
               </div>
             </div>
-            <a
-              href="/admin/dashboard"
+            <button
+              type="button"
+              onClick={handleLogin}
               className="bg-grey text-center text-white text-lg p-3 rounded-md px-10 mx-auto my-8 hover:bg-[#660708] transition-all duration-150"
             >
               Login as Administrator
-            </a>
+            </button>
             {/* <button type='submit' className='bg-grey text-center text-white text-lg p-3 rounded-md w-[194px] mx-auto my-10 hover:bg-[#660708] transition-all duration-150'>Login</button> */}
           </form>
         </div>

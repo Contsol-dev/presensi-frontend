@@ -1,55 +1,57 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "@/styleInvoice/style.css";
 
-const rowNumbers = Array.from({ length: 15 }, (_, index) => index + 1);
-const Invoice = () => {
-  const Data = [
-    {
-      id: 1,
-      name: "Tangguh Hari Cahyono",
-      masuk: "08:00",
-      pulang: "08:00",
-      mulai: "08:00",
-      selesai: "08:00",
-      totalJam: "08:00",
-      lebih: "08:00",
-      kurang: "08:00",
-      logAktifitas: "Membuat tampilan responsive",
-      sKehadiran: "Hadir",
-      Kebaikan: "Merapihkan Sandal",
-      status: true,
-    },
-    {
-      id: 2,
-      name: "Tangguh  Cahyono",
-      masuk: "08:00",
-      pulang: "08:00",
-      mulai: "08:00",
-      selesai: "08:00",
-      totalJam: "08:00",
-      lebih: "08:00",
-      kurang: "08:00",
-      logAktifitas: "Membuat tampilan responsive",
-      sKehadiran: "Izin",
-      Kebaikan: "Merapihkan Sandal",
-      status: false,
-    },
-    {
-      id: 3,
-      name: "Tangguh Hari ",
-      masuk: "08:00",
-      pulang: "08:00",
-      mulai: "08:00",
-      selesai: "08:00",
-      totalJam: "08:00",
-      lebih: "08:00",
-      kurang: "08:00",
-      logAktifitas: "Membuat tampilan responsive",
-      sKehadiran: "Tidak Hadir",
-      Kebaikan: "Merapihkan Sandal",
-      status: true,
-    },
-  ];
+interface InvoiceProps {
+  filter: string;
+  search: string;
+}
+interface PresensiData {
+  nama: string;
+  masuk: string;
+  pulang: string;
+  istirahat: string;
+  kembali: string;
+  log_activity: string;
+  kehadiran: string;
+  kebaikan: string;
+}
+
+const today = new Date().toLocaleDateString("id-ID", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+const Invoice = ({ filter, search }: InvoiceProps) => {
+  const [data, setData] = useState<PresensiData[]>([]);
+
+  const fetchPresensi = async () => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/admin/presensi/harian",
+        {
+          filter: filter,
+          nama: search,
+        }
+      );
+      console.log(response.data);
+      setData(response.data.presensi);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const rowNumbers = Array.from(
+    { length: data.length },
+    (_, index) => index + 1
+  );
+
+  useEffect(() => {
+    fetchPresensi();
+  }, [filter, search]);
+
+
   return (
     <div className="invoice-container">
       <div className="header">
@@ -76,7 +78,7 @@ const Invoice = () => {
           PRESENSI HARIAN
         </h3>
         <p style={{ fontSize: "14px", fontWeight: "bold" }}>
-          Data per tanggal 01–09–2023
+          Data per tanggal {today}
         </p>
         <table>
           <thead>
@@ -91,14 +93,14 @@ const Invoice = () => {
           </thead>
           <tbody>
             {rowNumbers.map((rowNumber) => {
-              const item = Data[rowNumber - 1]; // Adjust the index based on your data
+              const item = data[rowNumber - 1]; // Adjust the index based on your data
               return (
                 <tr key={rowNumber}>
                   <td>{rowNumber}</td>
-                  <td>{item ? item.name : ""}</td>
+                  <td>{item ? item.nama : ""}</td>
                   <td>{item ? item.masuk : ""}</td>
-                  <td>{item ? item.mulai : ""}</td>
-                  <td>{item ? item.selesai : ""}</td>
+                  <td>{item ? item.istirahat : ""}</td>
+                  <td>{item ? item.kembali : ""}</td>
                   <td>{item ? item.pulang : ""}</td>
                 </tr>
               );
