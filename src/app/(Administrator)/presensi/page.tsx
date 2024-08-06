@@ -32,6 +32,7 @@ export default function Presensi() {
   const [cekInvoice, setCekInvoice] = useState(false);
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [tanggal, setTanggal] = useState("");
   const [username, setUsername] = useState("");
 
   const handleBarcode = () => {
@@ -46,9 +47,14 @@ export default function Presensi() {
     setPresensi(!presensi);
     setCekInvoice(!cekInvoice);
   };
-  const handleInvoiceClick = (search: string, filter: string) => {
+  const handleInvoiceClick = (
+    search: string,
+    filter: string,
+    tanggal: string
+  ) => {
     setFilter(filter);
     setSearch(search);
+    setTanggal(tanggal);
     handleInvoice();
   };
   const handleUsername = (username: string) => {
@@ -101,7 +107,7 @@ export default function Presensi() {
           >
             <IoIosArrowBack />
           </p>
-          <Invoice filter={filter} search={search} />
+          <Invoice filter={filter} search={search} tanggal={tanggal} />
         </div>
       )}
     </div>
@@ -112,7 +118,7 @@ export default function Presensi() {
 interface headerProps {
   handleBarcode: () => void;
   handleDetailP: (username: string) => void;
-  handleInvoice: (search: string, filter: string) => void;
+  handleInvoice: (search: string, filter: string, tanggal: string) => void;
 }
 
 function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
@@ -161,7 +167,7 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
   };
 
   const handleInvoiceClick = () => {
-    handleInvoice(search, filter);
+    handleInvoice(search, filter, selectedDate);
   };
 
   const handleUsername = (username: string) => {
@@ -238,6 +244,7 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
           filter={filter}
           handleDetailP={handleUsername}
           search={search}
+          selectedDate={selectedDate}
         />
         <p
           className="flex gap-1 justify-center items-center text-[10px] rounded-sm text-center font-inter py-1 px-2 mt-3 bg-button text-white w-[60px] cursor-pointer"
@@ -336,6 +343,7 @@ function DatePicker({
 interface TablePresensiProps {
   filter: string;
   search: string;
+  selectedDate: string;
   handleDetailP: (username: string) => void;
 }
 interface PresensiData {
@@ -349,7 +357,12 @@ interface PresensiData {
   kehadiran: string;
   kebaikan: string;
 }
-function TablePresensi({ filter, search, handleDetailP }: TablePresensiProps) {
+function TablePresensi({
+  filter,
+  search,
+  selectedDate,
+  handleDetailP,
+}: TablePresensiProps) {
   const [jam, setJam] = useState(false);
   const [aturJam, setAturJam] = useState(false);
   const [info, setInfo] = useState(false);
@@ -366,6 +379,7 @@ function TablePresensi({ filter, search, handleDetailP }: TablePresensiProps) {
         {
           filter: filter,
           nama: search,
+          tanggal: selectedDate,
         }
       );
       console.log(response.data);
@@ -377,7 +391,7 @@ function TablePresensi({ filter, search, handleDetailP }: TablePresensiProps) {
 
   useEffect(() => {
     fetchPresensi();
-  }, [filter, search]);
+  }, [filter, search, selectedDate]);
   // Function to open the modal and set the selected item
   const openModal = () => {
     setJam(true);

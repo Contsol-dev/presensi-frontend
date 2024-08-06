@@ -1,6 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import axios from "axios";
+
+interface PresensiData {
+  username: string;
+  nama: string;
+  jumlah_hadir: number;
+  jumlah_izin: number;
+  jumlah_tidak_hadir: number;
+}
 
 export default function Halaman() {
   // Bikin tanggalan
@@ -8,6 +17,20 @@ export default function Halaman() {
   const sebulanlalu = new Date(tanggalan.getTime() - 30 * 24 * 60 * 60 * 1000);
   const Tanggal1 = sebulanlalu.toISOString().substring(0, 10);
   const Tanggal2 = tanggalan.toISOString().substring(0, 10);
+  const [presensi, setPresensi] = useState<PresensiData[]>([]);
+  const [search, setSearch] = useState("");
+  const [shift, setShift] = useState([]);
+  const [id, setId] = useState(0);
+
+  const fetchShift = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/admin/shift");
+      const jsonData = await response.json();
+      setShift(jsonData.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   // tanggalan 1
   const [tanggal1, setTanggal1] = useState<string>(Tanggal1);
@@ -20,6 +43,31 @@ export default function Halaman() {
 
   const handleDate2Change = (Event: ChangeEvent<HTMLInputElement>) =>
     setTanggal2(Event.target.value);
+
+  const fetchPresensi = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/admin/laporan", {
+        tanggal_mulai: tanggal1,
+        tanggal_selesai: tanggal2,
+        filter: search,
+        shift_id: id,
+      });
+      setPresensi(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPresensi();
+    fetchShift();
+  }, [tanggal1, tanggal2, search, id]);
+
+  const handleShift = (shift: number) => {
+    setId(shift);
+  };
+
   // membuat header
   function Header() {
     return (
@@ -47,6 +95,9 @@ export default function Halaman() {
                     className="bg-transparent text-xs h-7  w-4/5 focus:outline-none text-black "
                     type="text"
                     placeholder="Pencarian"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    autoFocus
                   />
                 </div>
               </div>
@@ -95,35 +146,13 @@ export default function Halaman() {
             <div className="absolute right-4 z-10 border border-solid border-[#b5b5b5] bg-[#E9E9E9] px-1">
               <div className="py-1">
                 <p className=" block px-2 py-1 text-xs">Shift</p>
-                <div className="flex gap-1 px-2 text-[11px]">
-                  <input type="checkbox" />
-                  <p>Shift Pagi</p>
-                </div>
-                <div className="flex gap-1 px-2 text-[11px]">
-                  <input type="checkbox" />
-                  <p>Shift Middle</p>
-                </div>
-                <div className="flex gap-1 px-2 text-[11px]">
-                  <input type="checkbox" />
-                  <p>Shift Siang</p>
-                </div>
-              </div>
-              <div className="py-1">
-                <p className=" block px-2 py-1 text-xs border border-t-black">
-                  Kantor
-                </p>
-                <div className="flex gap-1 px-2 text-[11px]">
-                  <input type="checkbox" />
-                  <p>Kantor 1</p>
-                </div>
-                <div className="flex gap-1 px-2 text-[11px]">
-                  <input type="checkbox" />
-                  <p>Kantor 2</p>
-                </div>
-                <div className="flex gap-1 px-2 text-[11px]">
-                  <input type="checkbox" />
-                  <p>Kantor 4</p>
-                </div>
+                {shift.map((item) => (
+                  <div className="flex gap-1 px-2 text-[11px]">
+                    <p onClick={() => handleShift(item.id)}>
+                      Shift {item.nama_shift}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -134,7 +163,7 @@ export default function Halaman() {
 
   function Tanggal() {
     return (
-      <div className="date flex flex-col md:flex-row gap-4 overflow-x-auto justify-end ">
+      <div className="date flex flex-col md:flex-row gap-4 justify-end ">
         <div className="flex gap-3 justify-end">
           <div className="p-2 items-center text-xs border border-black">
             <input
@@ -157,18 +186,6 @@ export default function Halaman() {
           <div className="flex gap-1 p-2 text-xs border border-black cursor-pointer">
             <img src="/filter.svg" alt="filter" />
             <Filter />
-          </div>
-          <div className="p-2 text-sm border border-black cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="currentColor"
-              className="bi bi-search"
-              viewBox="0 0 16 16"
-            >
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-            </svg>
           </div>
         </div>
       </div>
@@ -193,47 +210,58 @@ export default function Halaman() {
             </tr>
           </thead>
           <tbody>
-            <tr className="trLaporan border border-gray-200 text-xs bg-white font-inter">
-              <td className="px-2 py-2 text-center">
-                <input type="checkbox" />
-              </td>
-              <td className="px-2 py-2 text-center">1</td>
-              <td className="td px-2 py-2 text-center">
-                <a href="/detail-profile" className="hover:text-blue-950 ">
-                  Nurfan Rahmat Berlian
-                </a>
-              </td>
-              <td className="td px-2 py-2 text-center">
-                MJ/PROG/UAD/SEPT2023/01
-              </td>
-              <td className="px-2 py-2 text-center">
-                <a
-                  href="/detail-profile/detail-hadir"
-                  className="flex justify-center items-center"
-                >
-                  <span>30</span>
-                  <img src="/info.svg" alt="info" className="w-3 ml-1" />
-                </a>
-              </td>
-              <td className="px-2 py-2 text-center">
-                <a
-                  href="/detail-profile/detail-izin"
-                  className="flex justify-center items-center"
-                >
-                  <span className="text-koneng">30</span>
-                  <img src="/info.svg" alt="info" className="w-3 ml-1" />
-                </a>
-              </td>
-              <td className="px-2 py-2 text-center">
-                <a
-                  href="/detail-profile/detail-tidak-hadir"
-                  className="flex justify-center items-center"
-                >
-                  <span className="text-error">30</span>
-                  <img src="/info.svg" alt="info" className="w-3 ml-1" />
-                </a>
-              </td>
-            </tr>
+            {presensi.map((item, index) => (
+              <tr
+                key={index}
+                className="trLaporan border border-gray-200 text-xs bg-white font-inter"
+              >
+                <td className="px-2 py-2 text-center">
+                  <input type="checkbox" />
+                </td>
+                <td className="px-2 py-2 text-center">1</td>
+                <td className="td px-2 py-2 text-center">
+                  <a href="/detail-profile" className="hover:text-blue-950 ">
+                    {item.nama}
+                  </a>
+                </td>
+                <td className="td px-2 py-2 text-center">{item.username}</td>
+                <td className="px-2 py-2 text-center">
+                  <a
+                    href="/detail-profile/detail-hadir"
+                    className="flex justify-center items-center"
+                  >
+                    <span>
+                      {item.jumlah_hadir !== undefined ? item.jumlah_hadir : 0}
+                    </span>
+                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                  </a>
+                </td>
+                <td className="px-2 py-2 text-center">
+                  <a
+                    href="/detail-profile/detail-izin"
+                    className="flex justify-center items-center"
+                  >
+                    <span className="text-koneng">
+                      {item.jumlah_izin !== undefined ? item.jumlah_izin : 0}
+                    </span>
+                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                  </a>
+                </td>
+                <td className="px-2 py-2 text-center">
+                  <a
+                    href="/detail-profile/detail-tidak-hadir"
+                    className="flex justify-center items-center"
+                  >
+                    <span className="text-error">
+                      {item.jumlah_tidak_hadir !== undefined
+                        ? item.jumlah_tidak_hadir
+                        : 0}
+                    </span>
+                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                  </a>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -7,7 +7,7 @@ export default function SearchBar() {
         <input
           type="text"
           className=" bg-neutral-200 font-inter border border-black px-32 py-1 rounded-md pl-8"
-          placeholder="Cari Anggota Divisi"
+          placeholder="Cari Nama Divisi"
         />
         <a
           href="/search"
