@@ -6,9 +6,9 @@ import { BsCardText } from "react-icons/bs";
 import AdminProfile from "@/app/component/adminProfile";
 import NavbarAdminDashboard from "@/app/component/nav-admin";
 import { AiOutlinePicture } from "react-icons/ai";
+import axios from "axios";
 
 export default function Utama() {
-  const [data, setData] = useState({});
 
   return (
     <>
@@ -17,8 +17,8 @@ export default function Utama() {
         <Pengaturan />
         <div className="overflow-auto bg-gray-100 w-full p-4 flex flex-col gap-5  min-h-0">
           <AdminProfile />
-          <Search data={data} setData={setData} />
-          <Table data={data} setData={setData} />
+          <TambahDivisi />
+          <Table />
         </div>
       </div>
     </>
@@ -37,57 +37,19 @@ function Pengaturan() {
       <p className="text-sm text-gray-600">PENGATURAN UTAMA</p>
       <ul className="list-disc list-inside text-gray-400 text-sm border-b border-black pb-7 ">
         <li className="hover:text-black hover:bg-red-200 rounded-lg px-2 py-1 my-1">
-          <a href="/admin/pengaturan/jam&quotes">Quotes</a>
-        </li>
-        <li className="hover:text-black hover:bg-red-200 rounded-lg px-2 py-1 my-1">
           <a href="/admin/pengaturan/manage-shift">Manage Shift</a>
         </li>
         <li className="text-black bg-red-200 rounded-lg px-2 py-1 my-1">
           <a href="/admin/pengaturan/manage-divisi">Manage Divisi</a>
-        </li>
-        <li
-          className="hover:text-black list-none hover:bg-red-200 rounded-lg px-2 py-1 my-1 cursor-pointer"
-          onClick={toggleManageDivisi}
-        >
-          <div className="flex gap-4">
-            <span>Manage Project</span>{" "}
-            {showManageDivisi ? <IoIosArrowUp /> : <IoIosArrowDown />}
-          </div>
-
-          {showManageDivisi && (
-            <ul className="list-disc list-inside text-gray-400 text-sm ml-4">
-              <li className="hover:text-black hover:border hover:border-black rounded-lg px-2 py-1 my-1">
-                <a href="/admin/pengaturan/project-category">
-                  Project’s Category
-                </a>
-              </li>
-              <li className="hover:text-black hover:border hover:border-black rounded-lg px-2 py-1 my-1">
-                <a href="/admin/pengaturan/project-tags">Project’s Tags</a>
-              </li>
-              {/* Tambahkan lebih banyak subitem sesuai kebutuhan */}
-            </ul>
-          )}
-        </li>
-        <li className="hover:text-black hover:bg-red-200 rounded-lg px-2 py-1 my-1">
-          <a href="/admin/pengaturan/manage-alumni">Manage Alumni</a>
-        </li>
-        <li className="hover:text-black hover:bg-red-200 rounded-lg px-2 py-1 my-1">
-          <a href="/admin/pengaturan/lokasi-kantor">Manage Kantor</a>
-        </li>
-      </ul>
-      <p className="text-sm text-gray-600 pt-7">PANEL ADMINISTRATOR</p>
-      <ul className="list-disc list-inside text-gray-400 text-sm ">
-        <li className="hover:text-black hover:bg-red-200 rounded-lg px-2 py-1 my-1">
-          <a href="/admin/pengaturan/user&organization">User & Organizations</a>
         </li>
       </ul>
     </div>
   );
 }
 
-function Search({ data, setData }: any) {
+function TambahDivisi() {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [newInput, setNewInput] = useState({ name: null, photo: null });
+  const [divisiBaru, setDivisiBaru] = useState('');
 
   const openModal = () => {
     setModalOpen(true);
@@ -97,35 +59,22 @@ function Search({ data, setData }: any) {
     setModalOpen(false);
   };
 
-  const handleTextInput = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
-    setNewInput((prevInput) => ({ ...prevInput, [id]: event?.target?.value }));
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    setDivisiBaru(value);
   };
 
-  const handleFileInput = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setNewInput((prevInput) => ({ ...prevInput, [id]: reader.result }));
-      };
-      reader.readAsDataURL(file);
+  const submitDivision = async () => {
+    try {
+      console.log(divisiBaru);
+      const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi/add', {
+        'nama_divisi': divisiBaru
+      });
+      console.log('Response:', response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
     }
-  };
-
-  const handleRemoveFile = () => {
-    setNewInput((prevInput) => ({ ...prevInput, photo: null }));
-  };
-
-  const submitDivision = () => {
-    setData(newInput);
-    setNewInput({ name: null, photo: null });
-    setModalOpen(false);
   };
 
   return (
@@ -157,46 +106,6 @@ function Search({ data, setData }: any) {
 
               <div className="flex flex-col gap-2 mb-4">
                 <p className="font-medium text-md">Profile Divisi</p>
-                <div className="flex flex-row gap-4 items-center mb-2">
-                  {/* check foto ? sudah diupload : icon image */}
-                  {newInput?.photo ? (
-                    <div className="text-3xl rounded-full border border-black text-[#808080]">
-                      <img
-                        src={newInput.photo}
-                        alt="Uploaded"
-                        style={{
-                          borderRadius: "50%",
-                          width: "50px",
-                          height: "50px",
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="text-3xl rounded-full border border-black p-2 text-[#808080]">
-                      <AiOutlinePicture />
-                    </div>
-                  )}
-                  <div>
-                    <label
-                      htmlFor="file"
-                      className="button border border-2 text-xs px-4 py-2 rounded cursor-pointer"
-                    >
-                      Add Photo
-                    </label>
-                    <input
-                      className="w-[130px] hidden"
-                      id="file"
-                      type="file"
-                      onChange={(event) => handleFileInput(event, "photo")}
-                    />
-                  </div>
-                  <div
-                    className="text-red-500 text-xs cursor-pointer"
-                    onClick={handleRemoveFile}
-                  >
-                    Remove
-                  </div>
-                </div>
                 <div>
                   <p className="text-xs">Nama Divisi</p>
                 </div>
@@ -205,13 +114,13 @@ function Search({ data, setData }: any) {
                     <input
                       className="w-full h-[45px] text-xs border-b border-[#C1C7CD] bg-[#F2F4F8] p-2 focus:outline-none"
                       type="text"
+                      name="nama_divisi"
                       placeholder="Masukkan Nama Divisi"
-                      onChange={(event) => handleTextInput(event, "name")}
+                      onChange={handleInputChange}
                     />
                   </form>
                 </div>
               </div>
-
               <div className="flex justify-center">
                 <div className="flex justify-end gap-2 mt-2">
                   <button
@@ -224,7 +133,7 @@ function Search({ data, setData }: any) {
                     onClick={submitDivision}
                     className="bg-red-700 flex rounded-lg hover:bg-red-900   text-xs items-center justify-center gap-2 py-2 px-3 text-white w-24 font-inter"
                   >
-                    Simpan
+                    Tambah
                   </button>
                 </div>
               </div>
@@ -237,7 +146,7 @@ function Search({ data, setData }: any) {
 }
 
 function Table({ data, setData }: any) {
-  const [kampus, setKampus] = useState<any[]>([]);
+  const [divisi, setDivisi] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [modalEdit, setModalEdit] = useState(false);
@@ -251,10 +160,11 @@ function Table({ data, setData }: any) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://restaurant-api.dicoding.dev/list"
+          "http://127.0.0.1:8000/admin/manage-divisi"
         );
         const jsonData = await response.json();
-        setKampus(jsonData.restaurants);
+        setDivisi(jsonData.data);
+        console.log(divisi);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -262,14 +172,9 @@ function Table({ data, setData }: any) {
 
     fetchData();
   }, []);
-
-  //setiap "data" berubah akan ditambahkan ke "kampus"
-  useEffect(() => {
-    setKampus((prevKampus) => [data, ...prevKampus]);
-  }, [data]);
-
-  const handleModalEditOpen = (dataKampus: any, index: number) => {
-    setEditInput({ ...dataKampus, index });
+  const [divisiDetail, setDivisiDetail] = useState();
+  const handleModalEditOpen = (dataDivisi: any) => {
+    setDivisiDetail(dataDivisi);
     setModalEdit(true);
   };
 
@@ -285,51 +190,35 @@ function Table({ data, setData }: any) {
     setEditInput((prevInput) => ({ ...prevInput, [id]: event?.target?.value }));
   };
 
-  const handleFileInput = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setEditInput((prevInput) => ({ ...prevInput, [id]: reader.result }));
-      };
-      reader.readAsDataURL(file);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDivisiDetail((prevDetail) => ({
+      ...prevDetail,
+      [name]: value,
+    }));
+  };
+
+  const submitEditDivision = async () => {
+    try {
+      console.log(divisiDetail);
+      const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi', divisiDetail);
+      console.log('Response:', response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    setModalEdit(false);
+  };
+
+  const handleDeleteDivisi = async (index: any) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-divisi/delete/${index}`);
+      console.log('Response:', response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
-
-  const handleRemoveFile = () => {
-    setEditInput((prevInput) => ({ ...prevInput, photo: null }));
-  };
-
-  const submitEditDivision = () => {
-    setKampus((prevKampus) => {
-      const temp = [...prevKampus];
-      temp[editInput.index] = {
-        ...temp[editInput.index],
-        name: editInput.name,
-        photo: editInput.photo,
-      };
-      return temp;
-    });
-    setEditInput({ index: -1, name: "", photo: null });
-    setModalEdit(false);
-    console.log("idxedit", editInput.index);
-  };
-
-  const handleRemoveData = (index: number) => {
-    setKampus((prevKampus) => {
-      const temp = [...prevKampus];
-      temp.splice(index, 1);
-      return temp;
-    });
-    console.log("idxrmv", index);
-  };
-
-  useEffect(() => {
-    console.log("temp", kampus);
-  }, [kampus]);
 
   const getRowClassName = (index: any) => {
     return index % 2 === 0
@@ -340,7 +229,7 @@ function Table({ data, setData }: any) {
   const handleItemsPerPageChange = (event: any) => {
     const selectedItemsPerPage = parseInt(event.target.value, 10);
     setItemsPerPage(selectedItemsPerPage);
-    setCurrentPage(1); // Reset current page when changing items per page
+    setCurrentPage(1);
   };
 
   const handlePageChange = (event: any) => {
@@ -348,7 +237,7 @@ function Table({ data, setData }: any) {
     setCurrentPage(selectedPage);
   };
 
-  const totalPages = Math.ceil(kampus.length / itemsPerPage);
+  const totalPages = Math.ceil(divisi.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -370,10 +259,14 @@ function Table({ data, setData }: any) {
     return pageNumbers;
   };
 
+  const handlePenilaian = (divisi_id: any) => {
+    localStorage.setItem('divisi_id', divisi_id);
+    window.location.href = '/admin/pengaturan/manage-divisi/penilaian';
+  }
+
   return (
     <>
       <div className="flex gap-4">
-        {/* Dropdown for page selection */}
         <div className="filter flex gap-1 w-32 h-10 items-center justify-center text-sm bg-gray-200 border border-black rounded-md ">
           <select
             id="page-dropdown"
@@ -390,7 +283,6 @@ function Table({ data, setData }: any) {
           </select>
         </div>
 
-        {/* Dropdown for items per page selection */}
         <div className="filter flex gap-1 w-32 h-10 items-center bg-slate-200 justify-center text-sm border border-black rounded-md">
           <select
             id="items-per-page-dropdown"
@@ -413,7 +305,6 @@ function Table({ data, setData }: any) {
       </div>
 
       <div className="tableData">
-        {/* Displayed items based on selected items per page and current page */}
         <table className="table-auto w-full rounded-lg ">
           <thead className="bg-white border-b-2 border-gray-500 text-xs font-inter ">
             <tr>
@@ -424,21 +315,21 @@ function Table({ data, setData }: any) {
             </tr>
           </thead>
           <tbody>
-            {kampus
+            {divisi
               .slice(startIndex, endIndex)
-              .map((dataKampus: any, index) => (
+              .map((dataDivisi: any, index) => (
                 <tr key={index} className={getRowClassName(index)}>
                   <td className="px-2 py-2 text-center">
                     {startIndex + index + 1}
                   </td>
                   <td className="td px-2 py-2 text-center">
-                    {dataKampus.name}
+                    {dataDivisi.nama_divisi}
                   </td>
                   <td className="px-2 py-2 text-center">
                     <div className="flex justify-center items-center">
-                      <a href="/admin/pengaturan/manage-divisi/penilaian">
+                      <button onClick={() => handlePenilaian(dataDivisi.id)}>
                         <BsCardText width={30} style={{ color: "green" }} />
-                      </a>
+                      </button>
                     </div>
                   </td>
                   <td className="px-2 py-2 text-center">
@@ -446,7 +337,7 @@ function Table({ data, setData }: any) {
                       <button
                         className="py-2 px-4 bg-blue-500 text-white font-inter text-xs rounded-md"
                         onClick={() => {
-                          handleModalEditOpen(dataKampus, index);
+                          handleModalEditOpen(dataDivisi);
                         }}
                       >
                         Edit
@@ -454,7 +345,7 @@ function Table({ data, setData }: any) {
                       <button
                         className="py-2 px-4 bg-red-500 text-white font-inter text-xs rounded-md"
                         onClick={() => {
-                          handleRemoveData(index);
+                          handleDeleteDivisi(dataDivisi.id);
                         }}
                       >
                         Hapus
@@ -467,7 +358,6 @@ function Table({ data, setData }: any) {
         </table>
       </div>
 
-      {/* Display page numbers */}
       <div className="flex justify-center mt-4">{getPageNumbers()}</div>
 
       {/* Modal Edit */}
@@ -480,47 +370,6 @@ function Table({ data, setData }: any) {
               </h1>
 
               <div className="flex flex-col gap-2 mb-4">
-                <p className="font-medium text-md">Profile Divisi</p>
-                <div className="flex flex-row gap-4 items-center mb-2">
-                  {/* check foto ? sudah diupload : icon image */}
-                  {editInput?.photo ? (
-                    <div className="text-3xl rounded-full border border-black text-[#808080]">
-                      <img
-                        src={editInput.photo}
-                        alt="Uploaded"
-                        style={{
-                          borderRadius: "50%",
-                          width: "50px",
-                          height: "50px",
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="text-3xl rounded-full border border-black p-2 text-[#808080]">
-                      <AiOutlinePicture />
-                    </div>
-                  )}
-                  <div>
-                    <label
-                      htmlFor="file"
-                      className="button border border-2 text-xs px-4 py-2 rounded cursor-pointer"
-                    >
-                      Add Photo
-                    </label>
-                    <input
-                      className="w-[130px] hidden"
-                      id="file"
-                      type="file"
-                      onChange={(event) => handleFileInput(event, "photo")}
-                    />
-                  </div>
-                  <div
-                    className="text-red-500 text-xs cursor-pointer"
-                    onClick={handleRemoveFile}
-                  >
-                    Remove
-                  </div>
-                </div>
                 <div>
                   <p className="text-xs">Nama Divisi</p>
                 </div>
@@ -529,9 +378,10 @@ function Table({ data, setData }: any) {
                     <input
                       className="w-full h-[45px] text-xs border-b border-[#C1C7CD] bg-[#F2F4F8] p-2 focus:outline-none"
                       type="text"
+                      name="nama_divisi"
                       placeholder="Masukkan Nama Divisi"
-                      value={editInput?.name}
-                      onChange={(event) => handleTextInput(event, "name")}
+                      value={divisiDetail.nama_divisi}
+                      onChange={handleInputChange}
                     />
                   </form>
                 </div>

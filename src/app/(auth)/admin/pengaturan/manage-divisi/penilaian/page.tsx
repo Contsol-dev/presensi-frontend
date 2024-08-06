@@ -3,19 +3,117 @@ import Link from 'next/link';
 import AdminProfile from '@/app/component/adminProfile';
 import NavbarAdmin from '@/app/component/nav-admin';
 import '/src/stylePenilaian/style.css';
-import React, { useState } from "react";
-import { AiOutlinePicture } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 
 export default function Penilaian() {
+
+  const [penilaian, setPenilaian] = useState([]);
+  const [kategori, setKategori] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const fetchPenilaianData = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian/${localStorage.getItem('divisi_id')}`);
+      setPenilaian(response.data.penilaian);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchKategoriPenilaian = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-kategori/${localStorage.getItem('divisi_id')}`);
+      setKategori(response.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem('divisi_id')) {
+      fetchPenilaianData();
+    }
+  }, []);
+
+
   const openModal = () => {
+    fetchKategoriPenilaian();
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const handleInputChange = (e:any, id:any) => {
+    const {value} = e.target;
+    setSubCNew({
+      'category_id': id,
+      'nama_subkategori': value
+    })
+  }
+  
+  const handleInputKategori = (e:any) => {
+    const {value} = e.target;
+    setCNew({
+      'division_id': localStorage.getItem('divisi_id'),
+      'nama_kategori': value
+    })
+  }
+
+  const handleDeleteSubcategory = async (id:any) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-subkategori/${id}`);
+      console.log(response.data);
+      window.location.reload()
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const [subCNew, setSubCNew] = useState({
+    'category_id': '',
+    'nama_subkategori': ''
+  });
+
+  const handleAddSubcategory = async () => {
+    try {
+      console.log(subCNew)
+      const response = await axios.post('http://127.0.0.1:8000/admin/manage-penilaian-subkategori', subCNew);
+      console.log('Response:', response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const handleDeleteCategory = async (id:any) => {
+    try {
+      const division = localStorage.getItem('divisi_id')
+      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-kategori/${division}/${id}`);
+      console.log(response.data);
+      window.location.reload()
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const [CNew, setCNew] = useState({
+    'division_id': '',
+    'nama_kategori': '',
+  })
+
+  const handleAddCategory = async () => {
+    try {
+      console.log(CNew)
+      const response = await axios.post('http://127.0.0.1:8000/admin/manage-penilaian-kategori', CNew);
+      console.log('Response:', response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   return (
     <>
@@ -62,70 +160,38 @@ export default function Penilaian() {
                   </h1>
 
                   <div className="bg-gray-200 rounded-md p-4 mb-4">
-                    <div className="w-full mt-4 text-box relative">
-                      <div className="text-center mb-2">Pengetahuan</div>
-                      <div className="border-line"></div>
-                      <svg
-                        className="action-icon"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M18 6L6 18M6 6L18 18"
-                          stroke="black"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <div className="w-full mt-4 text-box relative">
-                      <div className="text-center mb-2">Kreativitas</div>
-                      <div className="border-line"></div>
-                      <svg
-                        className="action-icon"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M18 6L6 18M6 6L18 18"
-                          stroke="black"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <div className="w-full mt-4 text-box relative">
-                      <div className="text-center mb-2">Lainnya</div>
-                      <div className="border-line"></div>
-                      <svg
-                        className="action-icon"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M18 6L6 18M6 6L18 18"
-                          stroke="black"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    {kategori.map((item, index) => (
+                      <div key={index} className="w-full mt-4 text-box relative">
+                        <div className="flex justify-between">
+                          <div className="text-center mb-2">{item.nama_kategori}</div>
+                          <button onClick={() => handleDeleteCategory(item.id)}>
+                            <svg
+                              className="action-icon"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M18 6L6 18M6 6L18 18"
+                                stroke="black"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <div className="border-line"></div>
+                      </div>
+                    ))}
                   </div>
                   <div className="flex items-center mt-2">
                     <input
                       type="text"
+                      name=''
+                      onChange={handleInputKategori}
                       className="border-gray-300 bg-gray-100 border p-2 rounded-md"
                       style={{ width: '100%', fontSize: 'small' }}
                       placeholder="Tambah Kategori Izin"
@@ -140,7 +206,7 @@ export default function Penilaian() {
                         Batal
                       </button>
                       <button
-                        onClick={closeModal}
+                        onClick={handleAddCategory}
                         className="bg-red-700 flex rounded-lg hover:bg-red-900 text-xs items-center justify-center gap-2 py-2 px-3 text-white w-24 font-inter"
                       >
                         Tambahkan
@@ -156,15 +222,15 @@ export default function Penilaian() {
             <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 add-category" onClick={openModal}>
               + Tambah Kategori
             </button>
-
-            <div className="flex justify-between mt-4">
-              <div className="w-1/2">
-                <div className="mt-2 text-sm font-semibold">Pengetahuan</div>
-                {/* Isi grid 1 */}
-                {/* Garis lurus text box */}
-                <div className="w-full mt-4 text-box relative">
-                  <div className="text-center mb-2">Desain Thinking</div>
-                  <div className="border-line"></div>
+          <div className="flex flex-wrap mt-4">
+      {penilaian.map((item, index) => (
+        <div key={index} className="w-1/2 p-2">
+          <div className="mt-2 text-sm font-semibold">{item.kategori.nama_kategori}</div>
+          {item.kategori.sub_kategori.map((subitem) => (
+            <div key={subitem.id} className="w-full mt-4 text-box relative">
+              <div className="flex justify-between">
+                <div className="text-center mb-2">{subitem.nama}</div>
+                <button onClick={() => handleDeleteSubcategory(subitem.id)}>
                   <svg
                     className="action-icon"
                     width="24"
@@ -181,204 +247,18 @@ export default function Penilaian() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </div>
-                {/* Baris tambahan untuk "Pemahaman Penerapan Desain" */}
-                <div className="w-full mt-4 text-box relative">
-                  <div className="text-center mb-2">Pemahaman Penerapan Desain</div>
-                  <div className="border-line"></div>
-                  <svg
-                    className="action-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                {/* Text box dan tombol "Add" */}
-                <div className="flex items-center mt-2">
-                  <input type="text" className="border-gray-300 bg-gray-100 border p-2 rounded-md" style={{width: '65%'}} />
-                  <button className="bg-red-600 text-white px-4 py-2 ml-2 rounded-md hover:bg-red-800">Tambah</button>
-                </div>
-                <div className="mt-10 text-sm font-semibold">Kreativitas</div>
-
-            {/* Garis lurus text box */}
-            <div className="w-full mt-4 text-box relative">
-              <div className="text-center mb-2">Desain Yang Menarik</div>
-              <div className="border-line"></div>
-              <svg
-                className="action-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            {/* Baris tambahan untuk*/}
-            <div className="w-full mt-4 text-box relative">
-              <div className="text-center mb-2">Pemecahan Masalah Pengguna</div>
-              <div className="border-line"></div>
-              <svg
-                className="action-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            {/* Baris tambahan untuk*/}
-            <div className="w-full mt-4 text-box relative">
-              <div className="text-center mb-2">Hasil Kerja</div>
-              <div className="border-line"></div>
-              <svg
-                className="action-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-
-            <div className="flex items-center mt-2">
-              <input
-                type="text"
-                className="border-gray-300 bg-gray-100 border p-2 rounded-md"
-                style={{width: '65%'}}
-              />
-              <button className="bg-red-600 text-white px-4 py-2 ml-2 rounded-md hover:bg-red-800">Tambah</button>
-            </div>
-            
+                </button>
               </div>
-              <div className="w-1/2">
-                <div className="mt-2 text-sm font-semibold">Lainnya</div>
-                {/* Isi grid 2 */}
-                <div className="w-full mt-4 text-box relative">
-                  <div className="text-center mb-2">Aktif presentasi</div>
-                  <div className="border-line"></div>
-                  <svg
-                    className="action-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="w-full mt-4 text-box relative">
-                  <div className="text-center mb-2">Kejujuran</div>
-                  <div className="border-line"></div>
-                  <svg
-                    className="action-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="w-full mt-4 text-box relative">
-                  <div className="text-center mb-2">Kedisiplinan</div>
-                  <div className="border-line"></div>
-                  <svg
-                    className="action-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="w-full mt-4 text-box relative">
-                  <div className="text-center mb-2">Tanggung Jawab</div>
-                  <div className="border-line"></div>
-                  <svg
-                    className="action-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="flex items-center mt-2">
-                  <input
-                    type="text"
-                    className="border-gray-300 bg-gray-100 border p-2 rounded-md"
-                    style={{width: '65%'}}
-                  />
-                  <button className="bg-red-600 text-white px-4 py-2 ml-2 rounded-md hover:bg-red-800">
-                    Tambah
-                  </button>
-                </div>
-              </div>
+              <div className="border-line"></div>
             </div>
+          ))}
+          <div className="flex items-center mt-2">
+            <input onChange={(e) => handleInputChange(e, item.kategori.id)} type="text" className="border-gray-300 bg-gray-100 border p-2 rounded-md" style={{ width: '65%' }} />
+            <button onClick={handleAddSubcategory} className="bg-red-600 text-white px-4 py-2 ml-2 rounded-md hover:bg-red-800">Tambah</button>
+          </div>
+        </div>
+      ))}
+    </div>
             {/* Tombol Submit */}
             <Link href="/admin/pengaturan/manage-divisi" passHref>
               <button className="absolute bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-800">

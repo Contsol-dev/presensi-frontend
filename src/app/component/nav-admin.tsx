@@ -117,7 +117,7 @@ export default function NavbarAdminDashboard() {
             <Link href="/team">Divisi</Link>
             <Link href="/admin/laporan">Laporan</Link>
             <Link href="/admin/kampus-sekolah">Sekolah/Kampus</Link>
-            <Link href="/admin/pengaturan/jam&quotes">Pengaturan</Link>
+            <Link href="/admin/pengaturan/manage-shift">Pengaturan</Link>
             <Link href="/admin/logout" className="flex gap-4 max-h-2 lg:absolute lg:py-8 lg:bottom-0">
               Keluar
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="26" viewBox="0 0 30 26" fill="none" className="opacity-50">
