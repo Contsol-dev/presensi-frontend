@@ -1,6 +1,29 @@
-export default function Nilai() {
+import { useEffect, useState } from 'react';
+
+export default function Nilai({ username, divisi_id }) {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/admin/manage-penilaian/${divisi_id}`);
+          const result = await response.json();
+          setData(result);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, [divisi_id]);
+
+    const handlerSubmitNilai = async (e) => {
+        e.preventDefault();
+        alert('submit hehe');
+    }
+    
     return (
-        <div>
+        <div className='basis-3/4'>
             <div className="flex font-inter mt-2 text-[#FFFFFF] bg-[#404040] items-center border border-1 border-solid border-black p-2">
             <div className="mx-2">
                 <svg width="75" height="79" viewBox="0 0 95 99" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,7 +44,7 @@ export default function Nilai() {
             </div>
             <form className="bg-[#eeeded] px-10 text-xs text-[#00000099]">
             <div className="pb-5 px-2 flex flex-wrap font-inter text-xs  gap-5 justify-between">
-                <div className="basis-[45%] ">
+                <div className="basis-3/4 ">
                 <p className="font-bold">Pengetahuan</p>
                 <span className="flex mt-2 justify-between">
                     <p className="mr-2">Desain Thinking</p>
@@ -32,47 +55,13 @@ export default function Nilai() {
                     <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
                 </span>
                 </div>
-                <div className="basis-[45%]">
-                <p className="font-bold">Lainnya</p>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Aktif Presentasi</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
-                </span>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Kejujuran</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
-                </span>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Kedeisiplinan</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
-                </span>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Tanggung Jawab</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md`````````````````" />
-                </span>
-                </div>
-                <div className="basis-[45%]">
-                <p className="font-bold">Keterampilan</p>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Desain Yang Menarik</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
-                </span>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Pemecahan Masalah</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
-                </span>
-                <span className="flex mt-2 justify-between">
-                    <p className="mr-2">Pemecahan Masalah</p>
-                    <input type="text" className="w-[30%] border border-solid border-1 border-black rounded-md" />
-                </span>
-                </div>
             </div>
             <div className="p-2">
                 <p>Kritik & Saran</p>
                 <input type="text" className="w-full h-16 mt-2 border border-solid border-1 border-black rounded-md" />
             </div>
             <div className="flex items-center justify-center py-5">
-                <button className="bg-[#A4161A] rounded-md text-xs text-white p-1">Simpan</button>
+                <button onClick={(e) => handlerSubmitNilai(e)} className="bg-[#A4161A] rounded-md text-xs text-white px-4 py-2">Simpan</button>
             </div>
             </form>
         </div>
