@@ -10,12 +10,22 @@ export default function Penilaian() {
 
   const [penilaian, setPenilaian] = useState([]);
   const [kategori, setKategori] = useState([]);
+  const [namaDivisi, setNamaDivisi] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
 
   const fetchPenilaianData = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian/${localStorage.getItem('divisi_id')}`);
       setPenilaian(response.data.penilaian);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  const fetchNamaDivisi = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-divisi/get/${localStorage.getItem('divisi_id')}`);
+      setNamaDivisi(response.data.data);
     } catch (err) {
       console.log(err);
     }
@@ -32,6 +42,7 @@ export default function Penilaian() {
 
   useEffect(() => {
     if (localStorage.getItem('divisi_id')) {
+      fetchNamaDivisi();
       fetchPenilaianData();
     }
   }, []);
@@ -66,7 +77,7 @@ export default function Penilaian() {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-subkategori/${id}`);
       console.log(response.data);
-      window.location.reload()
+      fetchPenilaianData();
     } catch (err) {
       console.log(err);
     }
@@ -82,7 +93,7 @@ export default function Penilaian() {
       console.log(subCNew)
       const response = await axios.post('http://127.0.0.1:8000/admin/manage-penilaian-subkategori', subCNew);
       console.log('Response:', response.data);
-      window.location.reload();
+      fetchPenilaianData();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -93,7 +104,8 @@ export default function Penilaian() {
       const division = localStorage.getItem('divisi_id')
       const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-kategori/${division}/${id}`);
       console.log(response.data);
-      window.location.reload()
+      fetchKategoriPenilaian();
+      fetchPenilaianData();
     } catch (err) {
       console.log(err);
     }
@@ -109,7 +121,8 @@ export default function Penilaian() {
       console.log(CNew)
       const response = await axios.post('http://127.0.0.1:8000/admin/manage-penilaian-kategori', CNew);
       console.log('Response:', response.data);
-      window.location.reload();
+      fetchKategoriPenilaian();
+      fetchPenilaianData();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -141,11 +154,11 @@ export default function Penilaian() {
                 </svg>
               </div>
             </Link>
-            <div className="ml-7 font-bold">Kategori Penilaian Ui/Ux</div>
+            <div className="ml-7 font-bold">Kategori Penilaian Divisi <span>{namaDivisi}</span></div>
           </div>          
 
           <div className="bg-black h-2 w-full relative">
-            <div className="absolute top-2 left-0 p-6 text-white">Tambah Kategori Penilaian Ui/Ux</div>
+            <div className="absolute top-2 left-0 p-6 text-white">Tambah Kategori Penilaian Divisi <span>{namaDivisi}</span></div>
             <p className="absolute top-12 left-0 p-6 text-xs text-white">
               Digunakan untuk menentukan kategori penilaian kepada Peserta Magang
             </p>
