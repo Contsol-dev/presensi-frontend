@@ -17,7 +17,6 @@ export default function Utama() {
         <Pengaturan />
         <div className="overflow-auto bg-gray-100 w-full p-4 flex flex-col gap-5  min-h-0">
           <AdminProfile />
-          <TambahDivisi />
           <Table />
         </div>
       </div>
@@ -47,104 +46,6 @@ function Pengaturan() {
   );
 }
 
-function TambahDivisi() {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [divisiBaru, setDivisiBaru] = useState('');
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { value } = e.target;
-    setDivisiBaru(value);
-  };
-
-  const submitDivision = async () => {
-    try {
-      console.log(divisiBaru);
-      const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi/add', {
-        'nama_divisi': divisiBaru
-      });
-      console.log('Response:', response.data);
-      window.location.reload();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  return (
-    <div className="search flex gap-8 items-center w-full p-2">
-      <div className="formSearch w-2/5 font-inter">
-        <h1 className="text-base mb-2 font-bold">Manage Divisi</h1>
-        <p className="text-xs font-inter">
-          Membuat Divisi Untuk Pegawai Magang
-        </p>
-        <div className="search-container ">
-          <button
-            id="btnModal"
-            className="text-xs bg-white p-2 rounded-lg flex gap-2 mt-4 justify-center items-center"
-            onClick={openModal}
-          >
-            <FiPlusCircle width={30} /> Tambah Divisi
-          </button>
-        </div>
-      </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-pengaturan bg-white max-w-xs p-8 rounded-xl p-4">
-            <div className="modal-content">
-              <h1 className="text-lg font-inter font-bold mb-5 ">
-                Tambah Divisi
-              </h1>
-
-              <div className="flex flex-col gap-2 mb-4">
-                <p className="font-medium text-md">Profile Divisi</p>
-                <div>
-                  <p className="text-xs">Nama Divisi</p>
-                </div>
-                <div>
-                  <form action="">
-                    <input
-                      className="w-full h-[45px] text-xs border-b border-[#C1C7CD] bg-[#F2F4F8] p-2 focus:outline-none"
-                      type="text"
-                      name="nama_divisi"
-                      placeholder="Masukkan Nama Divisi"
-                      onChange={handleInputChange}
-                    />
-                  </form>
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <div className="flex justify-end gap-2 mt-2">
-                  <button
-                    onClick={closeModal}
-                    className="border border-gray-600 flex rounded-lg    text-xs items-center justify-center gap-2 py-2 px-3 text-black w-24 font-inter"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    onClick={submitDivision}
-                    className="bg-red-700 flex rounded-lg hover:bg-red-900   text-xs items-center justify-center gap-2 py-2 px-3 text-white w-24 font-inter"
-                  >
-                    Tambah
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function Table({ data, setData }: any) {
   const [divisi, setDivisi] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -156,20 +57,19 @@ function Table({ data, setData }: any) {
     photo: null,
   });
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/admin/manage-divisi"
+      );
+      const jsonData = await response.json();
+      setDivisi(jsonData.data);
+      console.log(divisi);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/admin/manage-divisi"
-        );
-        const jsonData = await response.json();
-        setDivisi(jsonData.data);
-        console.log(divisi);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchData();
   }, []);
   const [divisiDetail, setDivisiDetail] = useState();
@@ -190,7 +90,7 @@ function Table({ data, setData }: any) {
     setEditInput((prevInput) => ({ ...prevInput, [id]: event?.target?.value }));
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setDivisiDetail((prevDetail) => ({
       ...prevDetail,
@@ -203,7 +103,7 @@ function Table({ data, setData }: any) {
       console.log(divisiDetail);
       const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi', divisiDetail);
       console.log('Response:', response.data);
-      window.location.reload();
+      fetchData();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -214,7 +114,7 @@ function Table({ data, setData }: any) {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/admin/manage-divisi/delete/${index}`);
       console.log('Response:', response.data);
-      window.location.reload();
+      fetchData();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -264,8 +164,107 @@ function Table({ data, setData }: any) {
     window.location.href = '/admin/pengaturan/manage-divisi/penilaian';
   }
 
+  function TambahDivisi() {
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [divisiBaru, setDivisiBaru] = useState('');
+  
+    const openModal = () => {
+      setModalOpen(true);
+    };
+  
+    const closeModal = () => {
+      setModalOpen(false);
+    };
+  
+    const handleInputChange = (e: any) => {
+      const { value } = e.target;
+      setDivisiBaru(value);
+    };
+  
+    const submitDivision = async () => {
+      try {
+        console.log(divisiBaru);
+        const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi/add', {
+          'nama_divisi': divisiBaru
+        });
+        console.log('Response:', response.data);
+        fetchData();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    return (
+      <div className="search flex gap-8 items-center w-full p-2">
+        <div className="formSearch w-2/5 font-inter">
+          <h1 className="text-base mb-2 font-bold">Manage Divisi</h1>
+          <p className="text-xs font-inter">
+            Membuat Divisi Untuk Pegawai Magang
+          </p>
+          <div className="search-container ">
+            <button
+              id="btnModal"
+              className="text-xs bg-white p-2 rounded-lg flex gap-2 mt-4 justify-center items-center"
+              onClick={openModal}
+            >
+              <FiPlusCircle width={30} /> Tambah Divisi
+            </button>
+          </div>
+        </div>
+  
+        {/* Modal */}
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-pengaturan bg-white max-w-xs p-8 rounded-xl p-4">
+              <div className="modal-content">
+                <h1 className="text-lg font-inter font-bold mb-5 ">
+                  Tambah Divisi
+                </h1>
+  
+                <div className="flex flex-col gap-2 mb-4">
+                  <p className="font-medium text-md">Profile Divisi</p>
+                  <div>
+                    <p className="text-xs">Nama Divisi</p>
+                  </div>
+                  <div>
+                    <form action="">
+                      <input
+                        className="w-full h-[45px] text-xs border-b border-[#C1C7CD] bg-[#F2F4F8] p-2 focus:outline-none"
+                        type="text"
+                        name="nama_divisi"
+                        placeholder="Masukkan Nama Divisi"
+                        onChange={handleInputChange}
+                      />
+                    </form>
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <div className="flex justify-end gap-2 mt-2">
+                    <button
+                      onClick={closeModal}
+                      className="border border-gray-600 flex rounded-lg    text-xs items-center justify-center gap-2 py-2 px-3 text-black w-24 font-inter"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      onClick={submitDivision}
+                      className="bg-red-700 flex rounded-lg hover:bg-red-900   text-xs items-center justify-center gap-2 py-2 px-3 text-white w-24 font-inter"
+                    >
+                      Tambah
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
+      <TambahDivisi />
       <div className="flex gap-4">
         <div className="filter flex gap-1 w-32 h-10 items-center justify-center text-sm bg-gray-200 border border-black rounded-md ">
           <select
