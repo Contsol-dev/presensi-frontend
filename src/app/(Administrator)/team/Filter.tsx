@@ -201,12 +201,6 @@ export default function Filter({
     <>
       {filter && (
         <div className="w-100">
-          <div className="relative items-center justify-between">
-            <div className="absolute mb-3 right-0">
-              <SearchBar />
-            </div>
-          </div>
-
           <div className="flex flex-col border-2 border-solid border-[#404040] rounded-lg mt-14">
             <div>
               <p className="bg-[#404040] p-3 rounded-t text-[#FFFFFFCC]">

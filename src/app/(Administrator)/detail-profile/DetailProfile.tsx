@@ -97,7 +97,7 @@ export default function DetProfile({ username }: DetailPresensiProps) {
   function DetailData() {
     return (
       <div className="flex flex-col gap-3">
-        <table className="table-auto w-full text-center text-[10px]">
+        <table className="table-auto w-full text-center text-[10px] mb-12">
           <thead className="bg-gray-300">
             <tr>
               <th className="p-1 cursor-pointer" rowSpan={2}>
@@ -361,7 +361,7 @@ export default function DetProfile({ username }: DetailPresensiProps) {
             <div className="bg-gray-100 rounded-lg px-3 py-2 flex gap-2 text-gray-500">
               <img src="/search.svg" alt="search icon" />
               <input
-                className="bg-transparent text-xs text-black"
+                className="bg-transparent text-xs text-black focus:outline-0"
                 type="text"
                 placeholder="Pencarian"
                 value={filter}
@@ -464,12 +464,6 @@ export default function DetProfile({ username }: DetailPresensiProps) {
             <InfoKehadiran />
           </div>
         )}
-        <span>
-          <button className="flex items-center gap-2 bg-h1 py-2 px-5 mb-3 text-white rounded-lg cursor-pointer text-xs">
-            <img src="/unduh.svg" alt="download" />
-            <p>PDF</p>
-          </button>
-        </span>
       </div>
     </>
   );

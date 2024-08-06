@@ -126,6 +126,7 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
   const [masuk, setMasuk] = useState(0);
   const [izin, setIzin] = useState(0);
   const [tidakMasuk, setTidakMasuk] = useState(0);
+  const [data, setData] = useState<PresensiData[]>([]);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().substring(0, 10)
   );
@@ -147,6 +148,27 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
   useEffect(() => {
     fetchPresensi();
   }, []);
+
+  const fetchPresensi2 = async () => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/admin/presensi/harian",
+        {
+          filter: filter,
+          nama: search,
+          tanggal: selectedDate,
+        }
+      );
+      console.log(response.data);
+      setData(response.data.presensi);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPresensi2();
+  }, [filter, search, selectedDate]);
 
   const handleFilter = async (status: string) => {
     if (filter == status) {
@@ -246,15 +268,17 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
           search={search}
           selectedDate={selectedDate}
         />
-        <p
-          className="flex gap-1 justify-center items-center text-[10px] rounded-sm text-center font-inter py-1 px-2 mt-3 bg-button text-white w-[60px] cursor-pointer"
-          onClick={handleInvoiceClick}
-        >
-          <span>
-            <LiaDownloadSolid />
-          </span>
-          PDF
-        </p>
+        {data && (
+          <p
+            className="flex gap-1 justify-center items-center text-[10px] rounded-sm text-center font-inter py-1 px-2 mt-3 bg-button text-white w-[60px] cursor-pointer"
+            onClick={handleInvoiceClick}
+          >
+            <span>
+              <LiaDownloadSolid />
+            </span>
+            PDF
+          </p>
+        )}
       </div>
     </>
   );
@@ -465,45 +489,46 @@ function TablePresensi({
           </tr>
         </thead>
         <tbody className=" text-[#69696b]">
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td className=" pt-2 pb-1 text-center pl-2 ">
-                <input type="checkbox" />
-              </td>
-              <td className=" pt-1 text-center">{index + 1}</td>
-              <td
-                className=" cursor-pointer pt-1"
-                onClick={() => handleUsername(item.username)}
-              >
-                {item.nama}
-              </td>
-              <td className="text-center text-blue-600 underline underline-offset-1">
-                <span className="cursor-pointer" onClick={handleAturJam}>
-                  {item.masuk}
-                </span>
-              </td>
-              <td className="text-center text-blue-600 underline underline-offset-1">
-                <span className="cursor-pointer" onClick={handleAturJam}>
-                  {item.pulang}
-                </span>
-              </td>
-              <td className="text-center text-blue-600 underline underline-offset-1">
-                <span className="cursor-pointer" onClick={handleAturJam}>
-                  {item.istirahat}
-                </span>
-              </td>
-              <td className="text-center text-blue-600 underline underline-offset-1">
-                <span className="cursor-pointer" onClick={handleAturJam}>
-                  {item.kembali}
-                </span>
-              </td>
-              <td className=" pt-1 text-center">{item.log_activity}</td>
-              <td className=" pt-1 text-center">
-                <span>{item.kehadiran}</span>
-              </td>
-              <td className=" pt-1 text-center">{item.kebaikan}</td>
-            </tr>
-          ))}
+          {data &&
+            data.map((item, index) => (
+              <tr key={index}>
+                <td className=" pt-2 pb-1 text-center pl-2 ">
+                  <input type="checkbox" />
+                </td>
+                <td className=" pt-1 text-center">{index + 1}</td>
+                <td
+                  className=" cursor-pointer pt-1"
+                  onClick={() => handleUsername(item.username)}
+                >
+                  {item.nama}
+                </td>
+                <td className="text-center text-blue-600 underline underline-offset-1">
+                  <span className="cursor-pointer" onClick={handleAturJam}>
+                    {item.masuk}
+                  </span>
+                </td>
+                <td className="text-center text-blue-600 underline underline-offset-1">
+                  <span className="cursor-pointer" onClick={handleAturJam}>
+                    {item.pulang}
+                  </span>
+                </td>
+                <td className="text-center text-blue-600 underline underline-offset-1">
+                  <span className="cursor-pointer" onClick={handleAturJam}>
+                    {item.istirahat}
+                  </span>
+                </td>
+                <td className="text-center text-blue-600 underline underline-offset-1">
+                  <span className="cursor-pointer" onClick={handleAturJam}>
+                    {item.kembali}
+                  </span>
+                </td>
+                <td className=" pt-1 text-center">{item.log_activity}</td>
+                <td className=" pt-1 text-center">
+                  <span>{item.kehadiran}</span>
+                </td>
+                <td className=" pt-1 text-center">{item.kebaikan}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
