@@ -2,6 +2,9 @@
 
 import React, { ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
+import { LiaDownloadSolid } from "react-icons/lia";
+import Invoice from "./invoice";
+import { IoIosArrowBack } from "react-icons/io";
 
 interface PresensiData {
   username: string;
@@ -21,6 +24,8 @@ export default function Halaman() {
   const [search, setSearch] = useState("");
   const [shift, setShift] = useState([]);
   const [id, setId] = useState(0);
+  const [cekInvoice, setCekInvoice] = useState(false);
+  const [tampil, setTampil] = useState(true);
 
   const fetchShift = async () => {
     try {
@@ -65,7 +70,16 @@ export default function Halaman() {
   }, [tanggal1, tanggal2, search, id]);
 
   const handleShift = (shift: number) => {
-    setId(shift);
+    if (id == shift) {
+      setId(0);
+    } else {
+      setId(shift);
+    }
+  };
+
+  const handleInvoice = () => {
+    setTampil(!tampil);
+    setCekInvoice(!cekInvoice);
   };
 
   // membuat header
@@ -269,10 +283,39 @@ export default function Halaman() {
   }
 
   return (
-    <div className="relative bg-gray-200 p-4 flex flex-col gap-5 h-full">
-      <Header />
-      <Tanggal />
-      <Table />
-    </div>
+    <>
+      {tampil && (
+        <div className="relative bg-gray-200 p-4 flex flex-col gap-5 h-full">
+          <Header />
+          <Tanggal />
+          <Table />
+          <p
+            className="flex gap-1 justify-center items-center text-[10px] rounded-sm text-center font-inter py-1 px-2 mt-3 bg-button text-white w-[60px] cursor-pointer"
+            onClick={handleInvoice}
+          >
+            <span>
+              <LiaDownloadSolid />
+            </span>
+            PDF
+          </p>
+        </div>
+      )}
+      {cekInvoice && (
+        <div>
+          <p
+            // className="absolute top-[310px] left-2 cursor-pointer"
+            onClick={handleInvoice}
+          >
+            <IoIosArrowBack />
+          </p>
+          <Invoice
+            filter={search}
+            shift_id={id}
+            tanggal_mulai={tanggal1}
+            tanggal_selesai={tanggal2}
+          />
+        </div>
+      )}
+    </>
   );
 }
