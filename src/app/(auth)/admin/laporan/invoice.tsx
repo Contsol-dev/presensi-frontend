@@ -105,7 +105,7 @@ const Invoice = ({
                 <td className="px-2 py-2 text-center">
                   <input type="checkbox" />
                 </td>
-                <td className="px-2 py-2 text-center">1</td>
+                <td className="px-2 py-2 text-center">{index + 1}</td>
                 <td className="td px-2 py-2 text-center">
                   <a href="/detail-profile" className="hover:text-blue-950 ">
                     {item.nama}

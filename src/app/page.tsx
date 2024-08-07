@@ -31,10 +31,29 @@ export default function Home() {
 
   const nama = sessionStorage.getItem("nama");
   const username = sessionStorage.getItem("username");
+  const [nip, setNip] = useState("");
+  const [shift, setShift] = useState(0);
+  const [namaShift, setNamaShift] = useState("");
 
   if (!nama || !username) {
     router.push("/user/login");
   }
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/admin/detail-pemagang/${username}`
+      );
+      setNip(response.data.user.nip);
+      setShift(response.data.user.shift_id);
+      const shiftResponse = await axios.get(
+        `http://127.0.0.1:8000/shift/${response.data.user.shift_id}`
+      );
+      setNamaShift(shiftResponse.data.data.nama_shift);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handdleofclickmod2 = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -104,6 +123,7 @@ export default function Home() {
       if (response.data.log.pulang) {
         setCurrentButton("Sudah Klik Pulang");
         setPulangTime(response.data.log.pulang);
+        setIsButtonHidden(true);
       }
       if (response.data.log.kebaikan) {
         setKebaikan(response.data.log.kebaikan);
@@ -170,10 +190,16 @@ export default function Home() {
 
   useEffect(() => {
     const intervalId = setInterval(updateProgressAndTime, 1000);
-    getTodayLog();
-    getLogs();
+    fetchUser();
     return () => clearInterval(intervalId);
   }, []);
+
+  const [edited, setEdited] = useState(false);
+
+  useEffect(() => {
+    getTodayLog();
+    getLogs();
+  }, [edited]);
 
   const [popupAttention, setPopupAttention] = useState(false);
   const [pulangNonaktif, setPulangNonaktif] = useState(false);
@@ -237,7 +263,7 @@ export default function Home() {
 
       if (response.ok && result.success) {
         console.log("Success:", result.message);
-        localStorage.clear();
+        sessionStorage.clear();
         router.push("/user/login");
       } else {
         throw new Error(result.message || "Gagal Logout");
@@ -510,11 +536,34 @@ export default function Home() {
   };
   let [user, setUser] = useState(true);
   let [log, setLog] = useState(false);
+  let [isiLog, setIsiLog] = useState("");
+  let [idLog, setIdLog] = useState(0);
   let [buatLog, setBuat] = useState(false);
   let [ganti, setGanti] = useState(false);
   let [editLog, setEditLog] = useState(false);
-  const openEdit = () => {
+  const openEdit = (isi: string, id: number) => {
+    setIsiLog(isi);
+    setIdLog(id);
     setEditLog(!editLog);
+  };
+  const closeEdit = () => {
+    setEditLog(!editLog);
+  };
+  const saveEdit = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/log/edit", {
+        id: idLog,
+        log_activity: isiLog,
+      });
+      if (response.data.success) {
+        alert("Log berhasil diubah");
+      }
+      setEdited(!edited);
+      setEditLog(!editLog);
+    } catch (error) {
+      console.log(error);
+      alert("Terjadi error");
+    }
   };
   const handleLog = () => {
     setUser((user = false));
@@ -732,7 +781,7 @@ export default function Home() {
                         {nama}
                       </p>
                       <p className="pr-10 text-[12px] font-thin md:text-lg">
-                        MJ/FE/POLINES/AGSTS2023/7
+                        {nip}
                       </p>
                     </div>
                   </div>
@@ -746,7 +795,7 @@ export default function Home() {
             <section className=" flex py-10 flex-wrap ">
               <div className="flex  flex-col items-center w-full  mx-10 gap-10 xl:w-1/4   ">
                 <div className="flex flex-col text-xl w-full pb-10 gap-8 h-full justify-center ">
-                  <b className="mx-auto text-[30px]">Shift Siang</b>
+                  <b className="mx-auto text-[30px]">Shift {namaShift}</b>
 
                   <div className="flex gap-4 flex-col justify-center items-center">
                     <button
@@ -969,7 +1018,7 @@ export default function Home() {
                   <div>
                     <p className="text-sm md:text-2xl font-semibold">{nama}</p>
                     <p className="pr-10 text-[12px] font-thin md:text-lg">
-                      MJ/FE/POLINES/AGSTS2023/7
+                      {nip}
                     </p>
                   </div>
                 </div>
@@ -1021,19 +1070,21 @@ export default function Home() {
                   <textarea
                     placeholder="Mengedit halaman Admin..."
                     className="bg-[#f7f3f3] h-44 focus:outline-none p-2"
+                    value={isiLog}
+                    onChange={(e) => setIsiLog(e.target.value)}
                   ></textarea>
                 </span>
 
                 <div className="flex justify-end gap-2 pt-6">
                   <button
                     className="bg-white rounded-md px-2 py-2 text-black/50  hover:scale-[1.03] transition-all duration-150"
-                    onClick={openEdit}
+                    onClick={closeEdit}
                   >
                     Cancel
                   </button>
                   <button
                     className=" bg-red-600 text-white rounded-md px-2 py-1  hover:scale-[1.03] transition-all duration-150"
-                    onClick={openEdit}
+                    onClick={saveEdit}
                   >
                     simpan
                   </button>
@@ -1051,7 +1102,7 @@ interface tableProps {
   openBukti: () => void;
 }
 interface tableProps2 {
-  openEdit: () => void;
+  openEdit: (isi: string, id: number) => void;
   logs: Array<{
     id: number;
     tanggal: string;
@@ -1112,7 +1163,7 @@ function Table({ openEdit, logs }: tableProps2) {
                   <th className="p-2 text-center ">
                     <button
                       className="px-3 py-1 rounded-md text-[#ffff] bg-blue-500 text-sm font-inter"
-                      onClick={openEdit}
+                      onClick={() => openEdit(item.log_activity, item.id)}
                     >
                       Edit
                     </button>
@@ -1139,7 +1190,7 @@ function Table({ openEdit, logs }: tableProps2) {
 
                 <button
                   className="text-center p-1 rounded-lg text-xs text-white mt-2 bg-blue-500  w-[100px]"
-                  onClick={openEdit}
+                  onClick={() => openEdit(item.log_activity, item.id)}
                 >
                   Edit
                 </button>

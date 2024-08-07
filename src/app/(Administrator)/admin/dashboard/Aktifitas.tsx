@@ -185,7 +185,7 @@ export default function Aktifitas() {
         <div className=" flex gap-5 px-4 py-8  items-center">
           <div className="flex gap-5 items-center">
             <a
-              href="https://tokopedia.link/OzTgwGbTNLb"
+              href="#"
               className="font-normal text-red-600 cursor-pointer lg:text-sm"
             >
               Lihat lebih lanjut{" "}
