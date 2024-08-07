@@ -395,6 +395,7 @@ function TablePresensi({
   const [kIzinAktif, setKIzinAktif] = useState(false);
   const [tambahKategori, setTambahKategori] = useState(false);
   const [data, setData] = useState<PresensiData[]>([]);
+  const [edited, setEdited] = useState(false);
 
   const fetchPresensi = async () => {
     try {
@@ -415,7 +416,7 @@ function TablePresensi({
 
   useEffect(() => {
     fetchPresensi();
-  }, [filter, search, selectedDate]);
+  }, [filter, search, selectedDate, edited]);
   // Function to open the modal and set the selected item
   const openModal = () => {
     setJam(true);
@@ -444,6 +445,24 @@ function TablePresensi({
 
   const handleUsername = (username: string) => {
     handleDetailP(username);
+  };
+
+  const handleKehadiranChange = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    username: string
+  ) => {
+    const kehadiran = e.target.value;
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/log/kehadiran", {
+        username: username,
+        tanggal: selectedDate,
+        kehadiran: e.target.value,
+      });
+      console.log("Edit kehadiran berhasil");
+      setEdited(!edited);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -524,7 +543,14 @@ function TablePresensi({
                 </td>
                 <td className=" pt-1 text-center">{item.log_activity}</td>
                 <td className=" pt-1 text-center">
-                  <span>{item.kehadiran}</span>
+                  <select
+                    value={item.kehadiran}
+                    onChange={(e) => handleKehadiranChange(e, item.username)}
+                  >
+                    <option value="hadir">Hadir</option>
+                    <option value="tidak hadir">Tidak Hadir</option>
+                    <option value="izin">Izin</option>
+                  </select>
                 </td>
                 <td className=" pt-1 text-center">{item.kebaikan}</td>
               </tr>

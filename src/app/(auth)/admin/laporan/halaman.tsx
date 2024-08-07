@@ -8,13 +8,18 @@ import { IoIosArrowBack } from "react-icons/io";
 
 interface PresensiData {
   username: string;
+  nip: string;
   nama: string;
   jumlah_hadir: number;
   jumlah_izin: number;
   jumlah_tidak_hadir: number;
 }
 
-export default function Halaman() {
+interface HalamanProps {
+  onUsernameClick: (username: string) => void;
+}
+
+export default function Halaman({ onUsernameClick }: HalamanProps) {
   // Bikin tanggalan
   const tanggalan = new Date();
   const sebulanlalu = new Date(tanggalan.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -232,18 +237,19 @@ export default function Halaman() {
                 <td className="px-2 py-2 text-center">
                   <input type="checkbox" />
                 </td>
-                <td className="px-2 py-2 text-center">1</td>
+                <td className="px-2 py-2 text-center">{index + 1}</td>
                 <td className="td px-2 py-2 text-center">
-                  <a href="/detail-profile" className="hover:text-blue-950 ">
+                  <a
+                    href="#"
+                    className="hover:text-blue-950"
+                    onClick={() => onUsernameClick(item.username)}
+                  >
                     {item.nama}
                   </a>
                 </td>
-                <td className="td px-2 py-2 text-center">{item.username}</td>
+                <td className="td px-2 py-2 text-center">{item.nip}</td>
                 <td className="px-2 py-2 text-center">
-                  <a
-                    href="/detail-profile/detail-hadir"
-                    className="flex justify-center items-center"
-                  >
+                  <a href="#" className="flex justify-center items-center">
                     <span>
                       {item.jumlah_hadir !== undefined ? item.jumlah_hadir : 0}
                     </span>
@@ -251,10 +257,7 @@ export default function Halaman() {
                   </a>
                 </td>
                 <td className="px-2 py-2 text-center">
-                  <a
-                    href="/detail-profile/detail-izin"
-                    className="flex justify-center items-center"
-                  >
+                  <a href="#" className="flex justify-center items-center">
                     <span className="text-koneng">
                       {item.jumlah_izin !== undefined ? item.jumlah_izin : 0}
                     </span>
@@ -262,10 +265,7 @@ export default function Halaman() {
                   </a>
                 </td>
                 <td className="px-2 py-2 text-center">
-                  <a
-                    href="/detail-profile/detail-tidak-hadir"
-                    className="flex justify-center items-center"
-                  >
+                  <a href="#" className="flex justify-center items-center">
                     <span className="text-error">
                       {item.jumlah_tidak_hadir !== undefined
                         ? item.jumlah_tidak_hadir
