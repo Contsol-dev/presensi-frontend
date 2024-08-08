@@ -8,7 +8,7 @@ import Aktif from "./Aktif";
 import axios from "axios";
 
 interface FilterProps {
-  updatePilihan1: (stat: string) => void;
+  updatePilihan1: (username: string, stat: string) => void;
   updatePilihan2: (stat: string, username: string, divisi_id: number) => void;
   namaDivisi: string;
 }
@@ -30,9 +30,8 @@ export default function Filter({
   updatePilihan2,
   namaDivisi,
 }: FilterProps) {
-  const handlePilihan1Change = () => {
-    const stat = "sunting";
-    updatePilihan1(stat);
+  const handlePilihan1Change = (username: string) => {
+    updatePilihan1(username, "sunting");
   };
   const [anggota, setAnggota] = useState<AnggotaData[]>([]);
   const [cekInvoice, setCekInvoice] = useState(false);
