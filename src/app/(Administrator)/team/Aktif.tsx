@@ -26,8 +26,9 @@ export default function Aktif() {
     setPilihan(stat);
   };
 
-  const updatePilihan1 = (stat: string) => {
+  const updatePilihan1 = (username: string, stat: string) => {
     setPilihan(stat);
+    setUsername(username);
   };
 
   const updatePilihan2 = (
@@ -160,14 +161,7 @@ export default function Aktif() {
               />
             </svg>
           </div>
-          <div>
-            {selectedKey !== null && (
-              <Sunting
-                selectedKey={selectedKey}
-                selectedDetail={anggotaBaru[selectedKey]}
-              />
-            )}
-          </div>
+          <div>{selectedKey !== null && <Detail selectedKey={username} />}</div>
         </div>
       )}
 

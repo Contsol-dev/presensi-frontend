@@ -157,9 +157,6 @@ export default function Detail({ selectedKey }: DetailProps) {
           <p className="text-s md:text-2xl text-white">
             <b>{pemagang?.nama}</b>
           </p>
-          <span className="text-xs text-slate-400">
-            Konfirmasi Anggota Baru
-          </span>
         </div>
       </div>
       {/* container data */}
