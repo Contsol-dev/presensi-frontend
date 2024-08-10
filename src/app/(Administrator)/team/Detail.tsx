@@ -25,6 +25,10 @@ interface PemagangData {
 }
 
 export default function Detail({ selectedKey }: DetailProps) {
+  const [sertifikat, setSertifikat] = useState("");
+  const [memberCard, setMemberCard] = useState("");
+  const [nilai, setNilai] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
   const [pemagang, setPemagang] = useState<PemagangData>();
@@ -112,6 +116,10 @@ export default function Detail({ selectedKey }: DetailProps) {
       setNip(response.data.user.nip);
       setShift(response.data.user.shift_id);
       setDivisi(response.data.user.divisi_id);
+      setSertifikat(response.data.user.sertifikat);
+      setMemberCard(response.data.user.member_card);
+      setNilai(response.data.user.nilai);
+      setWhatsapp(response.data.user.whatsapp);
     } catch (error) {
       console.log(error);
     }
@@ -123,7 +131,6 @@ export default function Detail({ selectedKey }: DetailProps) {
   }, []);
 
   const handleSimpan = async () => {
-    console.log("konts");
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/admin/detail-pemagang",
@@ -140,6 +147,10 @@ export default function Detail({ selectedKey }: DetailProps) {
           browser: browser,
           status_akun: status,
           konfirmasi_admin: konfirmasi,
+          sertifikat: sertifikat,
+          member_card: memberCard,
+          nilai: nilai,
+          whatsapp: whatsapp,
         }
       );
       if (response.data.success) {
@@ -372,6 +383,8 @@ export default function Detail({ selectedKey }: DetailProps) {
             <input
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
               placeholder="enter"
+              value={sertifikat}
+              onChange={(e) => setSertifikat(e.target.value)}
             />
           </div>
 
@@ -384,6 +397,8 @@ export default function Detail({ selectedKey }: DetailProps) {
             <input
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
               placeholder="enter"
+              value={memberCard}
+              onChange={(e) => setMemberCard(e.target.value)}
             />
           </div>
 
@@ -396,6 +411,8 @@ export default function Detail({ selectedKey }: DetailProps) {
             <input
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
               placeholder="enter"
+              value={nilai}
+              onChange={(e) => setNilai(e.target.value)}
             />
           </div>
 
@@ -408,6 +425,8 @@ export default function Detail({ selectedKey }: DetailProps) {
             <input
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
               placeholder="enter"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
             />
           </div>
         </div>
