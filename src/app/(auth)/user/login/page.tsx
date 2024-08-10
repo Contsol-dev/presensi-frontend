@@ -34,18 +34,22 @@ export default function Login() {
         const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
         const day = String(today.getDate()).padStart(2, "0");
         const tanggal = `${year}-${month}-${day}`;
-        try {
-          const logResponse = await axios.post(
-            "http://127.0.0.1:8000/log-baru",
-            {
-              username,
-              tanggal,
-            }
-          );
-        } catch (error) {
-          console.log(error);
+        if (response.data.status == "lulus") {
+          router.push("/alumni/dashboard");
+        } else {
+          try {
+            const logResponse = await axios.post(
+              "http://127.0.0.1:8000/log-baru",
+              {
+                username,
+                tanggal,
+              }
+            );
+          } catch (error) {
+            console.log(error);
+          }
+          router.push("/");
         }
-        router.push("/");
       } else {
         console.error("gagal login");
       }
