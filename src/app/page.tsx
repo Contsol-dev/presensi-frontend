@@ -180,12 +180,12 @@ export default function Home() {
     ).padStart(2, "0")}:${String(currentSeconds).padStart(2, "0")}`;
     setTime(timeString);
 
-    if (percentage >= 100) {
-      setTimeout(() => {
-        setProgress(0);
-        setTime("00:00:00");
-      }, 1000);
-    }
+    // if (percentage >= 100) {
+    //   setTimeout(() => {
+    //     setProgress(0);
+    //     setTime("00:00:00");
+    //   }, 1000);
+    // }
   };
 
   const [authorized, setAuthorized] = useState(true);
