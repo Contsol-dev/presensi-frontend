@@ -27,6 +27,8 @@ export default function Home() {
   const [logActivity, setLogActivity] = useState("");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
+  const [namaShift, setnamaShift] = useState('---');
+  const [nip, setNip] = useState('---')
   const router = useRouter();
 
   const nama = sessionStorage.getItem("nama");
@@ -168,7 +170,20 @@ export default function Home() {
     }
   };
 
+  const [authorized, setAuthorized] = useState(true);
+  const checkConnection = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/");
+      console.log(response.status)
+      setAuthorized(true); 
+    } catch (err) {
+      router.push('/user/login')
+      setAuthorized(false);
+    }
+  }
+
   useEffect(() => {
+    checkConnection();
     const intervalId = setInterval(updateProgressAndTime, 1000);
     getTodayLog();
     getLogs();

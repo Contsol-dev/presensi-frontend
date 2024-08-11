@@ -1,6 +1,37 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { GrPrevious } from 'react-icons/gr'
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
 export default function ResetPass() {
+    const [email, setEmail] = useState('');
+
+    const handleChangeEmail = (e: any) => {
+        e.preventDefault();
+        setEmail(e.target.value);
+        console.log(email);
+    }
+
+    const router = useRouter();
+
+    const handleSubmitEmail = async () => {
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/reset-password', {
+                email: email,
+            });
+
+            console.log('Response:', response.data);
+
+            if(response.status === 200) {
+                router.push('/redeemToken');
+            }
+
+        } catch (error) {
+        console.error('Error:', error);
+        }
+    }
+
     return (
         <div className=''>
             <div className='flex adjust gap-2 h-10 py-10 items-center absolute px-10 lg:h-20  font-bold '>
@@ -17,10 +48,17 @@ export default function ResetPass() {
                             Kami akan mengirimkan email konfirmasi untuk mengubah kata sandi Anda.
                         </p>
                     </div>
-                    <input type="text" placeholder='Masukan Email yang telah terdaftar' className='py-3 px-6 rounded-[50px] border-2 border-black max-w-[644px] w-full' />
-
-
-                    <a href="/otp" className='bg-button py-3 px-20 text-white rounded-xl hover:scale-[1.05] duration-150 transition-all'>Continue</a>
+                    <input 
+                        type="text" 
+                        placeholder='Masukan Email yang telah terdaftar' 
+                        className='py-3 px-6 rounded-[50px] border-2 border-black max-w-[644px] w-full' 
+                        onChange={handleChangeEmail}
+                    />
+                    <button onClick={handleSubmitEmail}
+                        className='bg-button py-3 px-20 text-white rounded-xl hover:scale-[1.05] duration-150 transition-all'
+                    >
+                        Continue
+                    </button>
                 </div>
             </div>
         </div>

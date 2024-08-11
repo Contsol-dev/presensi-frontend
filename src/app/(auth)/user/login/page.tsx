@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -14,6 +14,7 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [hidePassword, setHidePassword] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [authorized, setAuthorized] = useState(true);
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -60,9 +61,20 @@ export default function Login() {
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setHidePassword(!hidePassword);
-  };
+  const checkConnection = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/");
+      console.log(response.status)
+      setAuthorized(true); 
+    } catch (err) {
+      alert('Anda di Luar Jangkauan Wifi Kantor!')
+      setAuthorized(false);
+    }
+  }
+
+  useEffect(() => {
+    checkConnection();
+  }, []);
 
   return (
     <div className="grid-cols-1  md:grid-cols-2 grid h-screen mx-auto ">
