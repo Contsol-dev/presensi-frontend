@@ -27,15 +27,13 @@ export default function Home() {
   const [logActivity, setLogActivity] = useState("");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
-  const [namaShift, setnamaShift] = useState('---');
+  const [namaShift, setNamaShift] = useState('---');
   const [nip, setNip] = useState('---')
   const router = useRouter();
 
   const nama = sessionStorage.getItem("nama");
   const username = sessionStorage.getItem("username");
-  const [nip, setNip] = useState("");
   const [shift, setShift] = useState(0);
-  const [namaShift, setNamaShift] = useState("");
 
   if (!nama || !username) {
     router.push("/user/login");
@@ -482,13 +480,12 @@ export default function Home() {
         const selisihMenit = Math.floor(selisihWaktu / 60000);
         const selisihDetik = Math.floor((selisihWaktu % 60000) / 1000);
 
-        setTerlambat(`- ${selisihJam}:${selisihMenit}:${selisihDetik} `);
 
-        if (bgColormasuk === "bg-gray-300") {
-          setBgColormasuk("bg-h1");
-        } else {
-          setBgColormasuk("bg-gray-300");
-        }
+        // if (bgColormasuk === "bg-gray-300") {
+        //   setBgColormasuk("bg-h1");
+        // } else {
+        //   setBgColormasuk("bg-gray-300");
+        // }
       } else {
         setTerlambat(null);
       }
@@ -496,29 +493,29 @@ export default function Home() {
       setCurrentButton("Istirahat");
       setMasukTime(currentTime);
     } else if (currentButton === "Istirahat") {
-      if (bgColorIstirahat === "bg-gray-300") {
-        setBgColorInstirahat("bg-h1");
-      } else {
-        setBgColorInstirahat("bg-gray-300");
-      }
+      // if (bgColorIstirahat === "bg-gray-300") {
+      //   setBgColorInstirahat("bg-h1");
+      // } else {
+      //   setBgColorInstirahat("bg-gray-300");
+      // }
       addIstirahat();
       setCurrentButton("Masuk Kembali");
       setIstirahatTime(currentTime);
     } else if (currentButton === "Masuk Kembali") {
-      if (bgColorkem === "bg-gray-300") {
-        setbgColorKem("bg-h1");
-      } else {
-        setbgColorKem("bg-gray-300");
-      }
+      // if (bgColorkem === "bg-gray-300") {
+      //   setbgColorKem("bg-h1");
+      // } else {
+      //   setbgColorKem("bg-gray-300");
+      // }
       addKembali();
       setCurrentButton("Pulang");
       setMasukKembaliTime(currentTime);
     } else if (currentButton === "Pulang") {
-      if (bgColorPulang === "bg-gray-300") {
-        setBgColorPulang("bg-h1");
-      } else {
-        setBgColorPulang("bg-gray-300");
-      }
+      // if (bgColorPulang === "bg-gray-300") {
+      //   setBgColorPulang("bg-h1");
+      // } else {
+      //   setBgColorPulang("bg-gray-300");
+      // }
       addPulang();
       setCurrentButton("Sudah Klik Pulang");
       setPulangTime(currentTime);
@@ -853,9 +850,6 @@ export default function Home() {
                     <div className="rounded-lg flex  flex-col content p-3 w-[267.75px] h-[126px] bg-grey/10 flex-shrink-0">
                       <div className="flex  justify-between items-center  ">
                         <div className="flex items-center text-[17px]  gap-2">
-                          <span
-                            className={`h-4 w-4 block ${bgColormasuk} rounded-full `}
-                          ></span>
                           <b>Masuk</b>
                         </div>
                       </div>
@@ -867,9 +861,9 @@ export default function Home() {
                           <b className=" text-[20px]">{recordedTime} AM</b>
                         )}
 
-                        {terlambat !== null && (
+                        {/* {terlambat !== null && (
                           <b className="text-button text-[16px]">{terlambat}</b>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </div>
@@ -883,10 +877,6 @@ export default function Home() {
                     <div className="rounded-lg flex  flex-col content p-3 w-[267.75px] h-[126px] bg-grey/10 flex-shrink-0">
                       <div className="flex  justify-between items-center  ">
                         <div className="flex items-center text-[17px]  gap-2">
-                          <span
-                            className={`h-4 w-4 block ${bgColorIstirahat} rounded-full `}
-                          ></span>
-
                           <b>Istirahat</b>
                         </div>
                       </div>
@@ -910,9 +900,6 @@ export default function Home() {
                     <div className="rounded-lg flex  flex-col content p-3 w-[267.75px] h-[126px] bg-grey/10 flex-shrink-0">
                       <div className="flex  justify-between items-center  ">
                         <div className="flex items-center text-[17px]  gap-2">
-                          <span
-                            className={`h-4 w-4 block ${bgColorkem} rounded-full `}
-                          ></span>
                           <b>Masuk Kembali</b>
                         </div>
                       </div>
@@ -934,9 +921,6 @@ export default function Home() {
                     <div className="rounded-lg flex  flex-col content p-3 w-[267.75px] h-[126px] bg-grey/10 flex-shrink-0">
                       <div className="flex  justify-between items-center  ">
                         <div className="flex items-center text-[17px]  gap-2">
-                          <span
-                            className={`h-4 w-4 block ${bgColorPulang} rounded-full `}
-                          ></span>
                           <b>Pulang</b>
                         </div>
                       </div>

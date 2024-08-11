@@ -46,6 +46,7 @@ export default function Login() {
                 tanggal,
               }
             );
+            console.log(logResponse);
           } catch (error) {
             console.log(error);
           }
