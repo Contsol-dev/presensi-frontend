@@ -30,7 +30,7 @@ const Invoice = ({ filter, search, tanggal }: InvoiceProps) => {
   const fetchPresensi = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/presensi/harian",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/presensi/harian`,
         {
           filter: filter,
           nama: search,

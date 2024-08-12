@@ -41,7 +41,7 @@ export default function Home() {
   const fetchPresensi = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/alumni/files/${username}`
+        `${process.env.NEXT_PUBLIC_API_SERVER}/alumni/files/${username}`
       );
       console.log(response.data.files);
       setNama(response.data.nama);

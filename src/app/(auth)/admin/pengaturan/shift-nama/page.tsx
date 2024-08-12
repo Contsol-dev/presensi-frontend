@@ -62,7 +62,7 @@ function Table({ keyword, searchName }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/admin/sekolah/pemagang/${keyword}/${searchName}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah/pemagang/${keyword}/${searchName}`);
         setPemagang(response.data);
       } catch (error) {
         console.error("Error searching data:", error);

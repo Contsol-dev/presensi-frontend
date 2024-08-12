@@ -15,7 +15,7 @@ export default function Penilaian() {
 
   const fetchPenilaianData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian/${localStorage.getItem('divisi_id')}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian/${localStorage.getItem('divisi_id')}`);
       setPenilaian(response.data.penilaian);
     } catch (err) {
       console.log(err);
@@ -24,7 +24,7 @@ export default function Penilaian() {
   
   const fetchNamaDivisi = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-divisi/get/${localStorage.getItem('divisi_id')}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/get/${localStorage.getItem('divisi_id')}`);
       setNamaDivisi(response.data.data);
     } catch (err) {
       console.log(err);
@@ -33,7 +33,7 @@ export default function Penilaian() {
 
   const fetchKategoriPenilaian = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-kategori/${localStorage.getItem('divisi_id')}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian-kategori/${localStorage.getItem('divisi_id')}`);
       setKategori(response.data.data);
     } catch (err) {
       console.log(err);
@@ -75,7 +75,7 @@ export default function Penilaian() {
 
   const handleDeleteSubcategory = async (id:any) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-subkategori/${id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian-subkategori/${id}`);
       console.log(response.data);
       fetchPenilaianData();
     } catch (err) {
@@ -91,7 +91,7 @@ export default function Penilaian() {
   const handleAddSubcategory = async () => {
     try {
       console.log(subCNew)
-      const response = await axios.post('http://127.0.0.1:8000/admin/manage-penilaian-subkategori', subCNew);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian-subkategori`, subCNew);
       console.log('Response:', response.data);
       fetchPenilaianData();
     } catch (error) {
@@ -102,7 +102,7 @@ export default function Penilaian() {
   const handleDeleteCategory = async (id:any) => {
     try {
       const division = localStorage.getItem('divisi_id')
-      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-penilaian-kategori/${division}/${id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian-kategori/${division}/${id}`);
       console.log(response.data);
       fetchKategoriPenilaian();
       fetchPenilaianData();
@@ -119,7 +119,7 @@ export default function Penilaian() {
   const handleAddCategory = async () => {
     try {
       console.log(CNew)
-      const response = await axios.post('http://127.0.0.1:8000/admin/manage-penilaian-kategori', CNew);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian-kategori`, CNew);
       console.log('Response:', response.data);
       fetchKategoriPenilaian();
       fetchPenilaianData();

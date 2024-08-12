@@ -58,7 +58,7 @@ export default function DetProfile({ username }: DetailPresensiProps) {
   const fetchUser = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/detail-presensi",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-presensi`,
         {
           username: username,
           filter: filter,
@@ -85,7 +85,7 @@ export default function DetProfile({ username }: DetailPresensiProps) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/detail-presensi/catatan",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-presensi/catatan`,
         {
           username: username,
           tanggal: no,

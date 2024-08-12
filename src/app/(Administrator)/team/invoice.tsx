@@ -20,7 +20,7 @@ const Invoice = ({ username }: InvoiceProps) => {
   const fetchPresensi = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/admin/penilaian/${username}`
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/penilaian/${username}`
       );
       console.log(response.data);
       setData(response.data.penilaian);

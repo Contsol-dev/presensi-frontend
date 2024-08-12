@@ -77,7 +77,7 @@ function TambahShift() {
   const handleAddShift = async () => {
     try {
       console.log(shiftBaru)
-      const response = await axios.post('http://127.0.0.1:8000/admin/shift/add', shiftBaru);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift/add`, shiftBaru);
       console.log('Response:', response.data);
       window.location.reload();
     } catch (error) {
@@ -195,7 +195,7 @@ function Table() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/admin/shift"
+          `${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`
         );
         const jsonData = await response.json();
         setShift(jsonData.data);
@@ -250,7 +250,7 @@ function Table() {
   const deleteShiftHandler = async (id: any) => {
     try {
       console.log(shiftDetail);
-      const response = await axios.get(`http://127.0.0.1:8000/admin/shift/delete/${id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift/delete/${id}`);
       console.log('Response:', response.data);
       window.location.reload();
     } catch (error) {
@@ -269,7 +269,7 @@ function Table() {
   const handleEditShift = async () => {
     try {
       console.log(shiftDetail);
-      const response = await axios.post('http://127.0.0.1:8000/admin/shift', shiftDetail);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`, shiftDetail);
       console.log('Response:', response.data);
       window.location.reload();
     } catch (error) {

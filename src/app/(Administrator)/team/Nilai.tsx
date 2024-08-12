@@ -42,7 +42,7 @@ export default function Nilai({ username, divisi_id }) {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/admin/manage-penilaian/${divisi_id}`
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian/${divisi_id}`
       );
       const result = await response.json();
       console.log(result);
@@ -63,7 +63,7 @@ export default function Nilai({ username, divisi_id }) {
     }
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/admin/detail-pemagang/${username}`
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang/${username}`
       );
       const result = await response.json();
       console.log(result.user);
@@ -108,7 +108,7 @@ export default function Nilai({ username, divisi_id }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/pemagang/nilai",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/pemagang/nilai`,
         {
           username: username,
           penilaian: penilaian,

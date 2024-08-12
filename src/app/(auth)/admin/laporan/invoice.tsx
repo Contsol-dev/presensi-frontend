@@ -32,7 +32,7 @@ const Invoice = ({
 
   const fetchPresensi = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/admin/laporan", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/laporan`, {
         tanggal_mulai: tanggal_mulai,
         tanggal_selesai: tanggal_selesai,
         filter: filter,

@@ -19,7 +19,7 @@ export default function Login() {
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/login", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/login`, {
         email,
         password,
       });
@@ -32,7 +32,7 @@ export default function Login() {
         console.log("berhasil login");
         const today = new Date();
         const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // bulan dimulai dari 0
+        const month = String(today.getMonth() + 1).padStart(2, "0");
         const day = String(today.getDate()).padStart(2, "0");
         const tanggal = `${year}-${month}-${day}`;
         if (response.data.status == "lulus") {
@@ -40,7 +40,7 @@ export default function Login() {
         } else {
           try {
             const logResponse = await axios.post(
-              "http://127.0.0.1:8000/log-baru",
+              `${process.env.NEXT_PUBLIC_API_SERVER}/log-baru`,
               {
                 username,
                 tanggal,
@@ -68,7 +68,7 @@ export default function Login() {
 
   const checkConnection = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/`);
       console.log(response.status)
       setAuthorized(true); 
     } catch (err) {
@@ -78,6 +78,14 @@ export default function Login() {
   }
 
   useEffect(() => {
+    fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.ip);
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
     checkConnection();
   }, []);
 

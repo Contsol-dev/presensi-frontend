@@ -59,7 +59,7 @@ export default function Filter({
     try {
       if (namaDivisi != "all") {
         const response = await axios.post(
-          "http://127.0.0.1:8000/admin/divisi/anggota",
+          `${process.env.NEXT_PUBLIC_API_SERVER}/admin/divisi/anggota`,
           {
             nama_divisi: namaDivisi,
           }
@@ -68,7 +68,7 @@ export default function Filter({
         console.log(response.data.member);
       } else {
         const response = await axios.get(
-          "http://127.0.0.1:8000/admin/all-team"
+          `${process.env.NEXT_PUBLIC_API_SERVER}/admin/all-team`
         );
         setAnggota(response.data.member);
         console.log(response.data.member);

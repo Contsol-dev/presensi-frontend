@@ -60,7 +60,7 @@ function Table({ data, setData }: any) {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/admin/manage-divisi"
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi`
       );
       const jsonData = await response.json();
       setDivisi(jsonData.data);
@@ -101,7 +101,7 @@ function Table({ data, setData }: any) {
   const submitEditDivision = async () => {
     try {
       console.log(divisiDetail);
-      const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi', divisiDetail);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi`, divisiDetail);
       console.log('Response:', response.data);
       fetchData();
     } catch (error) {
@@ -112,7 +112,7 @@ function Table({ data, setData }: any) {
 
   const handleDeleteDivisi = async (index: any) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/admin/manage-divisi/delete/${index}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/delete/${index}`);
       console.log('Response:', response.data);
       fetchData();
     } catch (error) {
@@ -184,7 +184,7 @@ function Table({ data, setData }: any) {
     const submitDivision = async () => {
       try {
         console.log(divisiBaru);
-        const response = await axios.post('http://127.0.0.1:8000/admin/manage-divisi/add', {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/add`, {
           'nama_divisi': divisiBaru
         });
         console.log('Response:', response.data);

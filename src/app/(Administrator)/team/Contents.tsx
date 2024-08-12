@@ -61,7 +61,7 @@ export default function Contents({
   const fetchDiv = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/divisi/aktif",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/divisi/aktif`,
         {
           nama_divisi: namaDivisi,
         }

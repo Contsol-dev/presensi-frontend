@@ -19,7 +19,7 @@ export default function AdminLogin() {
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/admin/login", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/login`, {
         email,
         password,
       });

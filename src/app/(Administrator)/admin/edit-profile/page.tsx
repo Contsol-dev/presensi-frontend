@@ -22,7 +22,7 @@ export default function Administrator() {
   const fecthProfile = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/admin/profile/" + id
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/profile/` + id
       );
       const nama = response.data.profile.nama;
       const email = response.data.profile.email;
@@ -90,7 +90,7 @@ export default function Administrator() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/profile",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/profile`,
         formData,
         {
           headers: {

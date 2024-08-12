@@ -33,7 +33,7 @@ export default function ResetSandi() {
 
     const handleResetPassword = async () => {
         try {
-            const response = await axios.post(`http://127.0.0.1:8000/new-password`, newPassword)
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/new-password`, newPassword)
             if(response.status === 200) {
                 router.push('/user/login');
             }

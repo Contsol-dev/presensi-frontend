@@ -16,7 +16,7 @@ export default function ResetSandi() {
 
     const handleRedeemToken = async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/reset-password/${token}`)
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/reset-password/${token}`)
             if(response.status === 200) {
                 router.push(`/resetSandi?email=${encodeURIComponent(response.data.email)}`);
             }

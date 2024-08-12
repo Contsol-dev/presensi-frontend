@@ -16,7 +16,7 @@ export default function Dashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/admin/dashboard");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/dashboard`);
       setPemagang(response.data.pemagang);
       setAlumni(response.data.alumni);
       setMasuk(response.data.hadir);

@@ -39,7 +39,7 @@ const Invoice = ({ filter, username }: InvoiceProps) => {
   const fetchUser = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/detail-presensi",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-presensi`,
         {
           username: username,
           filter: filter,

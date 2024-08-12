@@ -134,7 +134,7 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
   const fetchPresensi = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/presensi/harian"
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/presensi/harian`
       );
       console.log(response.data);
       setMasuk(response.data.hadir);
@@ -152,7 +152,7 @@ function Header({ handleBarcode, handleDetailP, handleInvoice }: headerProps) {
   const fetchPresensi2 = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/presensi/harian",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/presensi/harian`,
         {
           filter: filter,
           nama: search,
@@ -400,7 +400,7 @@ function TablePresensi({
   const fetchPresensi = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/presensi/harian",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/presensi/harian`,
         {
           filter: filter,
           nama: search,
@@ -453,7 +453,7 @@ function TablePresensi({
   ) => {
     const kehadiran = e.target.value;
     try {
-      const response = await axios.post("http://127.0.0.1:8000/log/kehadiran", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/log/kehadiran`, {
         username: username,
         tanggal: selectedDate,
         kehadiran: e.target.value,

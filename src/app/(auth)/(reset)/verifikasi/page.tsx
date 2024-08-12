@@ -17,7 +17,7 @@ export default function ResetPass() {
 
     const handleSubmitEmail = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/reset-password', {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/reset-password`, {
                 email: email,
             });
 

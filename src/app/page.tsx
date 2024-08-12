@@ -42,12 +42,12 @@ export default function Home() {
   const fetchUser = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/admin/detail-pemagang/${username}`
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang/${username}`
       );
       setNip(response.data.user.nip);
       setShift(response.data.user.shift_id);
       const shiftResponse = await axios.get(
-        `http://127.0.0.1:8000/shift/${response.data.user.shift_id}`
+        `${process.env.NEXT_PUBLIC_API_SERVER}/shift/${response.data.user.shift_id}`
       );
       setNamaShift(shiftResponse.data.data.nama_shift);
     } catch (error) {
@@ -63,7 +63,7 @@ export default function Home() {
     const day = String(today.getDate()).padStart(2, "0");
     const tanggal = `${year}-${month}-${day}`;
     try {
-      const response = await axios.post("http://127.0.0.1:8000/kebaikan", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/kebaikan`, {
         username: username,
         tanggal: tanggal,
         kebaikan: kebaikan,
@@ -85,7 +85,7 @@ export default function Home() {
     const day = String(today.getDate()).padStart(2, "0");
     const tanggal = `${year}-${month}-${day}`;
     try {
-      const response = await axios.post("http://127.0.0.1:8000/log-activity", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/log-activity`, {
         username: username,
         tanggal: tanggal,
         log_activity: logActivity,
@@ -104,7 +104,7 @@ export default function Home() {
     const day = String(today.getDate()).padStart(2, "0");
     const tanggal = `${year}-${month}-${day}`;
     try {
-      const response = await axios.post("http://127.0.0.1:8000/get-log", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/get-log`, {
         username,
         tanggal,
       });
@@ -138,7 +138,7 @@ export default function Home() {
 
   const getLogs = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/get-logs", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/get-logs`, {
         username,
       });
       if (response.data.logs) {
@@ -191,7 +191,7 @@ export default function Home() {
   const [authorized, setAuthorized] = useState(true);
   const checkConnection = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/`);
       console.log(response.status)
       setAuthorized(true); 
     } catch (err) {
@@ -262,7 +262,7 @@ export default function Home() {
 
   const logout = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/logout", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/logout`, {
         method: "GET",
       });
 
@@ -305,7 +305,7 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch("http://127.0.0.1:8000/presensi-masuk", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-masuk`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -350,7 +350,7 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch("http://127.0.0.1:8000/presensi-istirahat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-istirahat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -394,7 +394,7 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch("http://127.0.0.1:8000/presensi-kembali", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-kembali`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -438,7 +438,7 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch("http://127.0.0.1:8000/presensi-pulang", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-pulang`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -563,7 +563,7 @@ export default function Home() {
   };
   const saveEdit = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/log/edit", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/log/edit`, {
         id: idLog,
         log_activity: isiLog,
       });

@@ -34,7 +34,7 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
 
   const fetchShift = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/admin/shift");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`);
       const jsonData = await response.json();
       setShift(jsonData.data);
     } catch (error) {
@@ -56,7 +56,7 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
 
   const fetchPresensi = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/admin/laporan", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/laporan`, {
         tanggal_mulai: tanggal1,
         tanggal_selesai: tanggal2,
         filter: search,

@@ -71,7 +71,7 @@ function Card() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/admin/sekolah");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah`);
         const jsonData = await response.json();
         setUniversitas(jsonData);
       } catch (error) {
@@ -83,7 +83,7 @@ function Card() {
 
   const handleSearch = async (keyword: any) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/admin/sekolah", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah`, {
         keyword: keyword,
       });
       setUniversitas(response.data);

@@ -51,7 +51,7 @@ export default function Detail({ selectedKey }: DetailProps) {
   const [divisions, setDivisions] = useState([]);
   const fetchData = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/admin/shift");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`);
       const jsonData = await response.json();
       setShifts(jsonData.data);
     } catch (error) {
@@ -59,7 +59,7 @@ export default function Detail({ selectedKey }: DetailProps) {
     }
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/divisi/aktif"
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/divisi/aktif`
       );
       setDivisions(response.data.divisions);
       console.log(response);
@@ -106,7 +106,7 @@ export default function Detail({ selectedKey }: DetailProps) {
   const fetchUser = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/admin/detail-pemagang/" + selectedKey
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang/` + selectedKey
       );
       setPemagang(response.data.user);
       setTanggalMasuk(response.data.user.tanggal_masuk);
@@ -133,7 +133,7 @@ export default function Detail({ selectedKey }: DetailProps) {
   const handleSimpan = async () => {
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/detail-pemagang",
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang`,
         {
           username: selectedKey,
           password: password,
