@@ -253,7 +253,7 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
                     <span>
                       {item.jumlah_hadir !== undefined ? item.jumlah_hadir : 0}
                     </span>
-                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                    {/* <img src="/info.svg" alt="info" className="w-3 ml-1" /> */}
                   </a>
                 </td>
                 <td className="px-2 py-2 text-center">
@@ -261,7 +261,7 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
                     <span className="text-koneng">
                       {item.jumlah_izin !== undefined ? item.jumlah_izin : 0}
                     </span>
-                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                    {/* <img src="/info.svg" alt="info" className="w-3 ml-1" /> */}
                   </a>
                 </td>
                 <td className="px-2 py-2 text-center">
@@ -271,7 +271,7 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
                         ? item.jumlah_tidak_hadir
                         : 0}
                     </span>
-                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                    {/* <img src="/info.svg" alt="info" className="w-3 ml-1" /> */}
                   </a>
                 </td>
               </tr>

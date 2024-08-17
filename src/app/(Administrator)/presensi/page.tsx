@@ -543,14 +543,15 @@ function TablePresensi({
                 </td>
                 <td className=" pt-1 text-center">{item.log_activity}</td>
                 <td className=" pt-1 text-center">
-                  <select
+                  {/* <select
                     value={item.kehadiran}
                     onChange={(e) => handleKehadiranChange(e, item.username)}
                   >
                     <option value="hadir">Hadir</option>
                     <option value="tidak hadir">Tidak Hadir</option>
                     <option value="izin">Izin</option>
-                  </select>
+                  </select> */}
+                  <span>{item.kehadiran === 'hadir' ? 'Hadir' : ''}</span>
                 </td>
                 <td className=" pt-1 text-center">{item.kebaikan}</td>
               </tr>
