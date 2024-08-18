@@ -1,6 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+// Definisikan interface yang sesuai
+interface NilaiProps {
+  username: string;
+  divisi_id: number;
+}
+
 interface PemagangData {
   username: string;
   nama: string;
@@ -22,11 +28,13 @@ interface PemagangData {
 
 interface SubKategori {
   id: number;
-  nilai: number;
+  nama: string; // Ubah sesuai dengan data yang diterima dari API
+  nilai?: number; // Optional karena nilai mungkin di-set belakangan
 }
 
 interface Kategori {
   id: number;
+  nama_kategori: string;
   sub_kategori: SubKategori[];
 }
 
@@ -34,48 +42,53 @@ interface Penilaian {
   kategori: Kategori;
 }
 
-export default function Nilai({ username, divisi_id }) {
-  const [data, setData] = useState([]);
+// Gunakan interface yang sesuai untuk state
+export default function Nilai({ username, divisi_id }: NilaiProps) {
+  const [data, setData] = useState<Penilaian[]>([]);
   const [pemagang, setPemagang] = useState<PemagangData>();
   const [penilaian, setPenilaian] = useState<Penilaian[]>([]);
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
+      // Fetch data penilaian
+      const responsePenilaian = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-penilaian/${divisi_id}`
       );
-      const result = await response.json();
-      console.log(result);
-      setData(result.penilaian);
+      const resultPenilaian = await responsePenilaian.json();
+      console.log(resultPenilaian);
+      setData(resultPenilaian.penilaian);
+
       setPenilaian(
-        result.penilaian.map((item: any) => ({
+        resultPenilaian.penilaian.map((item: any) => ({
           kategori: {
             id: item.kategori.id,
+            nama_kategori: item.kategori.nama_kategori,
             sub_kategori: item.kategori.sub_kategori.map((sub: any) => ({
               id: sub.id,
+              nama: sub.nama, // Sesuaikan dengan nama yang sesuai dari API
               nilai: 0,
             })),
           },
         }))
       );
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching penilaian data:", error);
     }
+
     try {
-      const response = await fetch(
+      // Fetch data pemagang
+      const responsePemagang = await fetch(
         `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang/${username}`
       );
-      const result = await response.json();
-      console.log(result.user);
-      setPemagang(result.user);
+      const resultPemagang = await responsePemagang.json();
+      console.log(resultPemagang.user);
+      setPemagang(resultPemagang.user);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching pemagang data:", error);
     }
   };
 
   useEffect(() => {
-    console.log("awikwok", divisi_id);
-
     fetchData();
   }, [divisi_id]);
 
@@ -104,7 +117,7 @@ export default function Nilai({ username, divisi_id }) {
     );
   };
 
-  const handlerSubmitNilai = async (e: { preventDefault: () => void }) => {
+  const handlerSubmitNilai = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post(

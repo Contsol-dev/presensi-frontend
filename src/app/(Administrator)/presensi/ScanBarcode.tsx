@@ -74,7 +74,7 @@ export default function ScanBarcode() {
             </div>
 
             <i className="md:text-3xl mx-auto text-center mb-5">
-              " Sudahkah Anda Istighfar Hari Ini "
+              &quot; Sudahkah Anda Istighfar Hari Ini &quot;
             </i>
           </div>
         </div>

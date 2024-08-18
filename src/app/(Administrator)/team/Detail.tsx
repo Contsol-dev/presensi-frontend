@@ -24,6 +24,23 @@ interface PemagangData {
   email: string;
 }
 
+interface Shift {
+  id: number;
+  nama_shift: string;
+  masuk: string;
+  istirahat: string;
+  kembali: string;
+  pulang: string;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+interface Division {
+  id: number;
+  nama_divisi: string;
+  jumlah_anggota: number;
+}
+
 export default function Detail({ selectedKey }: DetailProps) {
   const [sertifikat, setSertifikat] = useState("");
   const [memberCard, setMemberCard] = useState("");
@@ -47,11 +64,13 @@ export default function Detail({ selectedKey }: DetailProps) {
   const [status, setStatus] = useState("");
   const [konfirmasi, setKonfirmasi] = useState(false);
   const [showBarcode, setShowBarcode] = useState(false); // State for barcode popup visibility
-  const [shifts, setShifts] = useState([]);
-  const [divisions, setDivisions] = useState([]);
+  const [divisions, setDivisions] = useState<Division[]>([]);
+  const [shifts, setShifts] = useState<Shift[]>([]);
   const fetchData = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`
+      );
       const jsonData = await response.json();
       setShifts(jsonData.data);
     } catch (error) {
@@ -106,7 +125,8 @@ export default function Detail({ selectedKey }: DetailProps) {
   const fetchUser = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang/` + selectedKey
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/detail-pemagang/` +
+          selectedKey
       );
       setPemagang(response.data.user);
       setTanggalMasuk(response.data.user.tanggal_masuk);
@@ -297,7 +317,7 @@ export default function Detail({ selectedKey }: DetailProps) {
             <select
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
               value={divisi}
-              onChange={(e) => setDivisi(e.target.value)}
+              onChange={(e) => setDivisi(parseInt(e.target.value))}
             >
               <option value={0}>Pilih Divisi</option>
               {divisions.map((item) => (
@@ -310,7 +330,7 @@ export default function Detail({ selectedKey }: DetailProps) {
             <select
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
               value={shift}
-              onChange={(e) => setShift(e.target.value)}
+              onChange={(e) => setShift(parseInt(e.target.value))}
             >
               <option value={0}>Pilih Shift</option>
               {shifts.map((item) => (
@@ -352,11 +372,11 @@ export default function Detail({ selectedKey }: DetailProps) {
             <p className="px-1 mt-3">Konfirmasi Email</p>
             <select
               className="border-2 border-zinc-400 text-xs px-2 py-1 w-full h-7 block overflow-hidden whitespace-nowrap"
-              value={konfirmasi}
-              onChange={(e) => setKonfirmasi(e.target.value)}
+              value={konfirmasi.toString()}
+              onChange={(e) => setKonfirmasi(e.target.value === "true")}
             >
-              <option value={true}>Sudah</option>
-              <option value={false}>Belum</option>
+              <option value="true">Sudah</option>
+              <option value="false">Belum</option>
             </select>
           </form>
         </div>

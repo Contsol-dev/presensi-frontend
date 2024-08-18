@@ -8,8 +8,11 @@ import NavbarAdminDashboard from "@/app/component/nav-admin";
 import { AiOutlinePicture } from "react-icons/ai";
 import axios from "axios";
 
-export default function Utama() {
+interface DivisiDetail {
+  nama_divisi: string;
+}
 
+export default function Utama() {
   return (
     <>
       <div className="w-screen h-screen flex m-auto lg:p-0 overflow-hidden ">
@@ -72,7 +75,9 @@ function Table({ data, setData }: any) {
   useEffect(() => {
     fetchData();
   }, []);
-  const [divisiDetail, setDivisiDetail] = useState();
+  const [divisiDetail, setDivisiDetail] = useState<DivisiDetail>({
+    nama_divisi: "",
+  });
   const handleModalEditOpen = (dataDivisi: any) => {
     setDivisiDetail(dataDivisi);
     setModalEdit(true);
@@ -101,22 +106,27 @@ function Table({ data, setData }: any) {
   const submitEditDivision = async () => {
     try {
       console.log(divisiDetail);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi`, divisiDetail);
-      console.log('Response:', response.data);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi`,
+        divisiDetail
+      );
+      console.log("Response:", response.data);
       fetchData();
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
     setModalEdit(false);
   };
 
   const handleDeleteDivisi = async (index: any) => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/delete/${index}`);
-      console.log('Response:', response.data);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/delete/${index}`
+      );
+      console.log("Response:", response.data);
       fetchData();
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -160,40 +170,43 @@ function Table({ data, setData }: any) {
   };
 
   const handlePenilaian = (divisi_id: any) => {
-    localStorage.setItem('divisi_id', divisi_id);
-    window.location.href = '/admin/pengaturan/manage-divisi/penilaian';
-  }
+    localStorage.setItem("divisi_id", divisi_id);
+    window.location.href = "/admin/pengaturan/manage-divisi/penilaian";
+  };
 
   function TambahDivisi() {
     const [isModalOpen, setModalOpen] = useState(false);
-    const [divisiBaru, setDivisiBaru] = useState('');
-  
+    const [divisiBaru, setDivisiBaru] = useState("");
+
     const openModal = () => {
       setModalOpen(true);
     };
-  
+
     const closeModal = () => {
       setModalOpen(false);
     };
-  
+
     const handleInputChange = (e: any) => {
       const { value } = e.target;
       setDivisiBaru(value);
     };
-  
+
     const submitDivision = async () => {
       try {
         console.log(divisiBaru);
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/add`, {
-          'nama_divisi': divisiBaru
-        });
-        console.log('Response:', response.data);
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_SERVER}/admin/manage-divisi/add`,
+          {
+            nama_divisi: divisiBaru,
+          }
+        );
+        console.log("Response:", response.data);
         fetchData();
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     };
-  
+
     return (
       <div className="search flex gap-8 items-center w-full p-2">
         <div className="formSearch w-2/5 font-inter">
@@ -211,16 +224,16 @@ function Table({ data, setData }: any) {
             </button>
           </div>
         </div>
-  
+
         {/* Modal */}
         {isModalOpen && (
           <div className="modal-overlay">
-            <div className="modal-pengaturan bg-white max-w-xs p-8 rounded-xl p-4">
+            <div className="modal-pengaturan bg-white max-w-xs rounded-xl p-4">
               <div className="modal-content">
                 <h1 className="text-lg font-inter font-bold mb-5 ">
                   Tambah Divisi
                 </h1>
-  
+
                 <div className="flex flex-col gap-2 mb-4">
                   <p className="font-medium text-md">Profile Divisi</p>
                   <div>
@@ -362,7 +375,7 @@ function Table({ data, setData }: any) {
       {/* Modal Edit */}
       {modalEdit && (
         <div className="modal-overlay">
-          <div className="modal-pengaturan bg-white max-w-xs p-8 rounded-xl p-4">
+          <div className="modal-pengaturan bg-white max-w-xs rounded-xl p-4">
             <div className="modal-content">
               <h1 className="text-lg font-inter font-bold mb-5 ">
                 Edit Divisi

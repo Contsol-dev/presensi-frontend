@@ -1,22 +1,41 @@
 import { useEffect, useState } from "react";
-import Aktif from "./Aktif";
 import axios from "axios";
-// Dataset Dummy
 
-interface ShowListProps {
-  list: [];
-  onClick: (list: []) => void;
+// Definisikan tipe data untuk anggota
+interface Anggota {
+  username: string;
+  nama: string;
+  asal_sekolah: string;
+  tempat_lahir: string;
+  tanggal_lahir: string;
+  nomor_hp: string;
+  nip: string;
+  status_pegawai: string;
+  tanggal_masuk: string;
+  tanggal_keluar: string | null;
+  divisi_id: number | null;
+  shift_id: number | null;
+  nilai_id: number | null;
 }
 
+// Props untuk komponen ShowList
+interface ShowListProps {
+  list: Anggota; // Gunakan tipe Anggota di sini
+  onClick: (list: Anggota) => void;
+}
+
+// Props untuk komponen List
 interface ListProps {
   setSelectedKey: (key: any) => void;
   updatePilihan: (stat: string) => void;
 }
 
 export default function List({ setSelectedKey, updatePilihan }: ListProps) {
-  // buat fungsi onClick
-  const [anggota, setAnggota] = useState([]);
-  const handlePilihanChange = (key: number) => {
+  // Definisikan state anggota dengan tipe Anggota[]
+  const [anggota, setAnggota] = useState<Anggota[]>([]);
+
+  // Fungsi untuk mengubah pilihan berdasarkan key
+  const handlePilihanChange = (key: string) => {
     setSelectedKey(key);
     const stat = "data";
     updatePilihan(stat);
@@ -37,7 +56,7 @@ export default function List({ setSelectedKey, updatePilihan }: ListProps) {
     fetchTidakAktif();
   }, []);
 
-  // buat fungsi looping dataset
+  // Fungsi looping untuk menampilkan elemen ShowList
   const listsElements = anggota.map((list, index) => (
     <ShowList
       key={index}
@@ -46,7 +65,7 @@ export default function List({ setSelectedKey, updatePilihan }: ListProps) {
     />
   ));
 
-  // buat properti untuk memasukan dataset yg dilooping ke dalam body HTML
+  // Komponen untuk menampilkan daftar anggota
   function ShowList({ list, onClick }: ShowListProps) {
     return (
       <li

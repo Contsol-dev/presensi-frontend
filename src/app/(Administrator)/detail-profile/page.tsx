@@ -32,7 +32,7 @@ export default function DetailProfile() {
               </svg>
             </a>
             <div className="w-full overflow-auto">
-              <DetProfile />
+              <DetProfile username="" />
             </div>
           </div>
         </div>

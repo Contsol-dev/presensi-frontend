@@ -22,7 +22,7 @@ export default function Administrator() {
           </div>
           <div className="w-full h-[150px] bg-black text-white lg:px-6 lg:py-8">
             <h2 className="text-xl text-center lg:text-start lg:text-4xl">
-              Lihat Team "Syalita Widyandini"
+              Lihat Team &quot;Syalita Widyandini&quot;
             </h2>
             <p className="text-sm text-center lg:text-start">
               MJ/UIUX/POLINES/AGST2023/06

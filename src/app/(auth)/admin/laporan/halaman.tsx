@@ -19,6 +19,17 @@ interface HalamanProps {
   onUsernameClick: (username: string) => void;
 }
 
+interface Shift {
+  id: number;
+  nama_shift: string;
+  masuk: string;
+  istirahat: string;
+  kembali: string;
+  pulang: string;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 export default function Halaman({ onUsernameClick }: HalamanProps) {
   // Bikin tanggalan
   const tanggalan = new Date();
@@ -27,14 +38,16 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
   const Tanggal2 = tanggalan.toISOString().substring(0, 10);
   const [presensi, setPresensi] = useState<PresensiData[]>([]);
   const [search, setSearch] = useState("");
-  const [shift, setShift] = useState([]);
+  const [shift, setShift] = useState<Shift[]>([]);
   const [id, setId] = useState(0);
   const [cekInvoice, setCekInvoice] = useState(false);
   const [tampil, setTampil] = useState(true);
 
   const fetchShift = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/shift`
+      );
       const jsonData = await response.json();
       setShift(jsonData.data);
     } catch (error) {
@@ -56,12 +69,15 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
 
   const fetchPresensi = async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/laporan`, {
-        tanggal_mulai: tanggal1,
-        tanggal_selesai: tanggal2,
-        filter: search,
-        shift_id: id,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/laporan`,
+        {
+          tanggal_mulai: tanggal1,
+          tanggal_selesai: tanggal2,
+          filter: search,
+          shift_id: id,
+        }
+      );
       setPresensi(response.data.data);
       console.log(response.data.data);
     } catch (error) {
@@ -166,7 +182,7 @@ export default function Halaman({ onUsernameClick }: HalamanProps) {
               <div className="py-1">
                 <p className=" block px-2 py-1 text-xs">Shift</p>
                 {shift.map((item) => (
-                  <div className="flex gap-1 px-2 text-[11px]">
+                  <div key={item.id} className="flex gap-1 px-2 text-[11px]">
                     <p onClick={() => handleShift(item.id)}>
                       Shift {item.nama_shift}
                     </p>

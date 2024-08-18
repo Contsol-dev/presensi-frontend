@@ -27,12 +27,16 @@ export default function Home() {
   const [logActivity, setLogActivity] = useState("");
   const [recordedTime, setRecordedTime] = useState<string | null>(null);
   const [modal2, setmodal2] = useState(false);
-  const [namaShift, setNamaShift] = useState('---');
-  const [nip, setNip] = useState('---')
+  const [namaShift, setNamaShift] = useState("---");
+  const [nip, setNip] = useState("---");
   const router = useRouter();
 
-  const nama = sessionStorage.getItem("nama");
-  const username = sessionStorage.getItem("username");
+  let nama: any;
+  let username: any;
+  if (typeof window !== "undefined") {
+    nama = sessionStorage.getItem("nama");
+    username = sessionStorage.getItem("username");
+  }
   const [shift, setShift] = useState(0);
 
   if (!nama || !username) {
@@ -63,11 +67,14 @@ export default function Home() {
     const day = String(today.getDate()).padStart(2, "0");
     const tanggal = `${year}-${month}-${day}`;
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/kebaikan`, {
-        username: username,
-        tanggal: tanggal,
-        kebaikan: kebaikan,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/kebaikan`,
+        {
+          username: username,
+          tanggal: tanggal,
+          kebaikan: kebaikan,
+        }
+      );
       setmodal2(true);
       setTimeout(() => {
         setmodal2(false);
@@ -85,11 +92,14 @@ export default function Home() {
     const day = String(today.getDate()).padStart(2, "0");
     const tanggal = `${year}-${month}-${day}`;
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/log-activity`, {
-        username: username,
-        tanggal: tanggal,
-        log_activity: logActivity,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/log-activity`,
+        {
+          username: username,
+          tanggal: tanggal,
+          log_activity: logActivity,
+        }
+      );
       console.log("Sukses");
       handleIzin();
     } catch (error) {
@@ -104,10 +114,13 @@ export default function Home() {
     const day = String(today.getDate()).padStart(2, "0");
     const tanggal = `${year}-${month}-${day}`;
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/get-log`, {
-        username,
-        tanggal,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/get-log`,
+        {
+          username,
+          tanggal,
+        }
+      );
       if (response.data.log.masuk) {
         setCurrentButton("Istirahat");
         setMasukTime(response.data.log.masuk);
@@ -138,9 +151,12 @@ export default function Home() {
 
   const getLogs = async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/get-logs`, {
-        username,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/get-logs`,
+        {
+          username,
+        }
+      );
       if (response.data.logs) {
         setLogs(response.data.logs);
       }
@@ -191,14 +207,16 @@ export default function Home() {
   const [authorized, setAuthorized] = useState(true);
   const checkConnection = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/`);
-      console.log(response.status)
-      setAuthorized(true); 
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/`
+      );
+      console.log(response.status);
+      setAuthorized(true);
     } catch (err) {
-      router.push('/user/login')
+      router.push("/user/login");
       setAuthorized(false);
     }
-  }
+  };
 
   useEffect(() => {
     checkConnection();
@@ -262,9 +280,12 @@ export default function Home() {
 
   const logout = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/logout`, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/logout`,
+        {
+          method: "GET",
+        }
+      );
 
       if (!response.ok) {
         const errorDetails = await response.json();
@@ -276,7 +297,9 @@ export default function Home() {
 
       if (response.ok && result.success) {
         console.log("Success:", result.message);
-        sessionStorage.clear();
+        if (typeof window !== "undefined") {
+          sessionStorage.clear();
+        }
         router.push("/user/login");
       } else {
         throw new Error(result.message || "Gagal Logout");
@@ -305,13 +328,16 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-masuk`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/presensi-masuk`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         const errorDetails = await response.json();
@@ -350,13 +376,16 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-istirahat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/presensi-istirahat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         const errorDetails = await response.json();
@@ -394,13 +423,16 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-kembali`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/presensi-kembali`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         const errorDetails = await response.json();
@@ -438,13 +470,16 @@ export default function Home() {
 
     try {
       console.log(JSON.stringify(data));
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/presensi-pulang`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/presensi-pulang`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         const errorDetails = await response.json();
@@ -479,7 +514,6 @@ export default function Home() {
         selisihWaktu -= selisihJam * 3600000;
         const selisihMenit = Math.floor(selisihWaktu / 60000);
         const selisihDetik = Math.floor((selisihWaktu % 60000) / 1000);
-
 
         // if (bgColormasuk === "bg-gray-300") {
         //   setBgColormasuk("bg-h1");
@@ -563,10 +597,13 @@ export default function Home() {
   };
   const saveEdit = async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/log/edit`, {
-        id: idLog,
-        log_activity: isiLog,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/log/edit`,
+        {
+          id: idLog,
+          log_activity: isiLog,
+        }
+      );
       if (response.data.success) {
         alert("Log berhasil diubah");
       }

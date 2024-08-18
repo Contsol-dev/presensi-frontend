@@ -24,7 +24,9 @@ export default function NavbarAdminDashboard() {
   };
 
   const logout = async () => {
-    sessionStorage.clear();
+    if (typeof window !== "undefined") {
+      sessionStorage.clear();
+    }
   };
 
   return (
