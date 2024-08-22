@@ -103,7 +103,7 @@ export default function AdminLogin() {
                 />
               </div>
               <div className="flex justify-between w-full text-[19px]">
-                <div className="flex gap-2 items-center">
+                {/* <div className="flex gap-2 items-center">
                   <input
                     type="checkbox"
                     name="rememberMe"
@@ -111,7 +111,7 @@ export default function AdminLogin() {
                     className="h-4 w-4 border "
                   />
                   <label htmlFor="rememberMe">Ingatkan Saya</label>
-                </div>
+                </div> */}
                 <div className="flex gap-2">
                   <label htmlFor="forgotPassword">Lupa Kata Sandi?</label>
                   <a

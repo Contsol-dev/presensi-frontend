@@ -731,7 +731,7 @@ export default function Home() {
                     }}
                   ></textarea>
                   <p className="text-xs text-button">
-                    Note : Jangan lupa submit sebelum memencet tombol pulang
+                    Note : Jangan lupa submit log activity
                   </p>
                 </span>
 
