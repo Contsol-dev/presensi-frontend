@@ -14,7 +14,10 @@ export default function Administrator() {
   const [alamat, setAlamat] = useState("");
   const [about, setAbout] = useState("");
   const [adminId, setAdminId] = useState("");
-  const id = sessionStorage.getItem("id");
+  let id: any;
+  if (typeof window !== "undefined") {
+    id = sessionStorage.getItem("id");
+  }
   if (!id) {
     router.push("/admin/login");
   }

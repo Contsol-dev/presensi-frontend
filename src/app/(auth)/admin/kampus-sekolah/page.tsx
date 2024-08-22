@@ -8,6 +8,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+interface Universitas {
+  asal_sekolah: string;
+  jumlah_partisipan: number;
+}
+
 export default function utama() {
   return (
     <>
@@ -22,14 +27,14 @@ export default function utama() {
   );
 }
 
-function Search({ onSearch }) {
+function Search({ onSearch }: any) {
   const [keyword, setKeyword] = useState("");
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     setKeyword(e.target.value);
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = async (e: any) => {
     e.preventDefault();
     onSearch(keyword);
   };
@@ -63,15 +68,16 @@ function Search({ onSearch }) {
   );
 }
 
-
 function Card() {
   const router = useRouter();
-  const [universitas, setUniversitas] = useState([]);
-  
+  const [universitas, setUniversitas] = useState<Universitas[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah`
+        );
         const jsonData = await response.json();
         setUniversitas(jsonData);
       } catch (error) {
@@ -83,9 +89,12 @@ function Card() {
 
   const handleSearch = async (keyword: any) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah`, {
-        keyword: keyword,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah`,
+        {
+          keyword: keyword,
+        }
+      );
       setUniversitas(response.data);
     } catch (error) {
       console.error("Error searching data:", error);
@@ -108,13 +117,13 @@ function Card() {
                 <p>{`${un.jumlah_partisipan} Orang`}</p>
               </div>
             </div>
-            <Link 
+            <Link
               className="bg-white w-full h-1/5 rounded-b-md flex justify-between p-1"
               href={{
-                pathname: '/admin/pengaturan/shift-nama',
+                pathname: "/admin/pengaturan/shift-nama",
                 query: {
-                  kampus: un.asal_sekolah
-                }
+                  kampus: un.asal_sekolah,
+                },
               }}
             >
               <p className="text-xs font-inter font-bold">View Detail</p>

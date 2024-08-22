@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { HiUserGroup } from "react-icons/hi2";
 import { MdArrowCircleRight } from "react-icons/md";
-import NavbarAdminDashboard from "@/app/component/nav-admin";
 
 export default function utama() {
   return (
@@ -33,13 +32,19 @@ function Navbar() {
   return (
     <>
       {hide && (
-        <button onClick={shownav} className="burger flex justify-center items-center left-12 top-4 w-6 h-6 text-white rounded-full shadow-lg bg-button z-40 fixed color">
+        <button
+          onClick={shownav}
+          className="burger flex justify-center items-center left-12 top-4 w-6 h-6 text-white rounded-full shadow-lg bg-button z-40 fixed color"
+        >
           <AiOutlineMenu />
         </button>
       )}
       {nav && (
         <div className="navbar bg-[#DCDCDC] flex flex-col justify-between p-2  h-screen w-[340px] pb-20 sticky z-30 top-0 boxshadow border-r border-[#DCDCDC] ">
-          <div onClick={shownav} className="absolute cursor-pointer right-5 top-5 text-xl">
+          <div
+            onClick={shownav}
+            className="absolute cursor-pointer right-5 top-5 text-xl"
+          >
             <AiOutlineClose />
           </div>
           <div className="logo w-full flex  justify-center items-center">
@@ -89,7 +94,13 @@ function Profil() {
           <h1 className="text-lg font-bold">Nurfan Rahmat Berlian</h1>
           <p className="text-sm">Admin</p>
         </div>
-        <img className="profilImg" src="/kucing.png" width={50} height={50} alt="profil" />
+        <img
+          className="profilImg"
+          src="/kucing.png"
+          width={50}
+          height={50}
+          alt="profil"
+        />
       </div>
     </>
   );
@@ -104,8 +115,16 @@ function Search() {
           <form action="">
             <div className="search-wrapper ">
               <div className="search-content flex gap-2 bg-gray-100 rounded-lg p-1 ">
-                <img src="/search.svg" alt="search-icon" className="search-icon " />
-                <input className="bg-transparent text-xs h-7  w-4/5 focus:outline-none text-black " type="text" placeholder="Pencarian Kampus/Sekolah" />
+                <img
+                  src="/search.svg"
+                  alt="search-icon"
+                  className="search-icon "
+                />
+                <input
+                  className="bg-transparent text-xs h-7  w-4/5 focus:outline-none text-black "
+                  type="text"
+                  placeholder="Pencarian Kampus/Sekolah"
+                />
               </div>
             </div>
           </form>
@@ -123,7 +142,9 @@ function Table() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://restaurant-api.dicoding.dev/list");
+        const response = await fetch(
+          "https://restaurant-api.dicoding.dev/list"
+        );
         const jsonData = await response.json();
         setKampus(jsonData.restaurants);
       } catch (error) {
@@ -135,7 +156,9 @@ function Table() {
   }, []);
 
   const getRowClassName = (index: any) => {
-    return index % 2 === 0 ? "bg-white trLaporan border border-gray-200 text-xs font-inter " : "bg-gray-300 trLaporan border border-gray-200 text-xs font-inter ";
+    return index % 2 === 0
+      ? "bg-white trLaporan border border-gray-200 text-xs font-inter "
+      : "bg-gray-300 trLaporan border border-gray-200 text-xs font-inter ";
   };
 
   const handleItemsPerPageChange = (event: any) => {
@@ -157,7 +180,13 @@ function Table() {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
-        <button key={i} className={`px-1 py-1 mx-1 font-inter text-xs text-black ${i === currentPage ? "border-b text-xs border-black text-black" : ""}`} onClick={() => setCurrentPage(i)}>
+        <button
+          key={i}
+          className={`px-1 py-1 mx-1 font-inter text-xs text-black ${
+            i === currentPage ? "border-b text-xs border-black text-black" : ""
+          }`}
+          onClick={() => setCurrentPage(i)}
+        >
           {i}
         </button>
       );
@@ -170,7 +199,13 @@ function Table() {
       <div className="flex gap-4">
         {/* Dropdown for page selection */}
         <div className="filter flex gap-1 w-32 h-10 items-center justify-center text-sm border border-black rounded-md ">
-          <select id="page-dropdown" name="page" className="jenisFilter w-3/4 focus:outline-none text-xs bg-gray-200" onChange={handlePageChange} value={currentPage}>
+          <select
+            id="page-dropdown"
+            name="page"
+            className="jenisFilter w-3/4 focus:outline-none text-xs bg-gray-200"
+            onChange={handlePageChange}
+            value={currentPage}
+          >
             {Array.from({ length: totalPages }, (_, index) => (
               <option className="sm:text-xs" key={index + 1} value={index + 1}>
                 Page {index + 1}
@@ -181,7 +216,13 @@ function Table() {
 
         {/* Dropdown for items per page selection */}
         <div className="filter flex gap-1 w-32 h-10 items-center justify-center text-sm border border-black rounded-md">
-          <select id="items-per-page-dropdown" name="itemsPerPage" className="jenisFilter focus:outline-none text-xs bg-gray-200" onChange={handleItemsPerPageChange} value={itemsPerPage}>
+          <select
+            id="items-per-page-dropdown"
+            name="itemsPerPage"
+            className="jenisFilter focus:outline-none text-xs bg-gray-200"
+            onChange={handleItemsPerPageChange}
+            value={itemsPerPage}
+          >
             <option className="sm:text-xs" value="5">
               5 item per page
             </option>
@@ -209,35 +250,44 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {kampus.slice(startIndex, endIndex).map((dataKampus: any, index) => (
-              <tr key={dataKampus.index} className={getRowClassName(index)}>
-                <td className="px-2 py-2 text-center">{startIndex + index + 1}</td>
-                <td className="td px-2 py-2 text-center">
-                  <a href="" className=" text-blue-800 underline hover:text-blue-950 ">
-                    Nurfan Rahmat Berlian
-                  </a>
-                </td>
-                <td className="td px-2 py-2 text-center">{dataKampus.name}</td>
-                <td className="px-2 py-2 text-center">
-                  <div className="flex justify-center items-center">
-                    <span>30</span>
-                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
-                  </div>
-                </td>
-                <td className="px-2 py-2 text-center">
-                  <div className="flex justify-center items-center">
-                    <span className="text-koneng">30</span>
-                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
-                  </div>
-                </td>
-                <td className="px-2 py-2 text-center">
-                  <div className="flex justify-center items-center">
-                    <span className="text-error">30</span>
-                    <img src="/info.svg" alt="info" className="w-3 ml-1" />
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {kampus
+              .slice(startIndex, endIndex)
+              .map((dataKampus: any, index) => (
+                <tr key={dataKampus.index} className={getRowClassName(index)}>
+                  <td className="px-2 py-2 text-center">
+                    {startIndex + index + 1}
+                  </td>
+                  <td className="td px-2 py-2 text-center">
+                    <a
+                      href=""
+                      className=" text-blue-800 underline hover:text-blue-950 "
+                    >
+                      Nurfan Rahmat Berlian
+                    </a>
+                  </td>
+                  <td className="td px-2 py-2 text-center">
+                    {dataKampus.name}
+                  </td>
+                  <td className="px-2 py-2 text-center">
+                    <div className="flex justify-center items-center">
+                      <span>30</span>
+                      <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                    </div>
+                  </td>
+                  <td className="px-2 py-2 text-center">
+                    <div className="flex justify-center items-center">
+                      <span className="text-koneng">30</span>
+                      <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                    </div>
+                  </td>
+                  <td className="px-2 py-2 text-center">
+                    <div className="flex justify-center items-center">
+                      <span className="text-error">30</span>
+                      <img src="/info.svg" alt="info" className="w-3 ml-1" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

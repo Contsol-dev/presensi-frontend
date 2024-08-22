@@ -31,7 +31,10 @@ export default function Home() {
   const [memberCard, setMemberCard] = useState("");
   const [nilai, setNilai] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const username = sessionStorage.getItem("username");
+  let username: any;
+  if (typeof window !== "undefined") {
+    username = sessionStorage.getItem("username");
+  }
   const router = useRouter();
 
   if (!username) {
@@ -210,7 +213,9 @@ export default function Home() {
                 <a
                   href="/user/login"
                   onClick={() => {
-                    sessionStorage.clear();
+                    if (typeof window !== "undefined") {
+                      sessionStorage.clear();
+                    }
                   }}
                   className="bg-h1 py-1 px-5 rounded-md text-white"
                 >
@@ -238,8 +243,8 @@ export default function Home() {
               </div>
 
               <i className="md:text-3xl mx-auto text-center">
-                "Selamat, Anda Telah Menjadi Alumni Seven Inc! Semoga sukses
-                selalu"
+                &quot; Selamat, Anda Telah Menjadi Alumni Seven Inc! Semoga
+                sukses selalu &quot;
               </i>
 
               <div className="flex justify-between items-center">

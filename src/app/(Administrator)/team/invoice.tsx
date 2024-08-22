@@ -6,6 +6,18 @@ interface InvoiceProps {
   username: string;
 }
 
+interface SubKategori {
+  id: number;
+  nama: string;
+  nilai: string;
+}
+
+interface Kategori {
+  id: number;
+  nama_kategori: string;
+  sub_kategori: SubKategori[];
+}
+
 const today = new Date().toLocaleDateString("id-ID", {
   day: "numeric",
   month: "long",
@@ -13,7 +25,7 @@ const today = new Date().toLocaleDateString("id-ID", {
 });
 
 const Invoice = ({ username }: InvoiceProps) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<{ kategori: Kategori }[]>([]);
   const [nama, setNama] = useState("");
   const [nip, setNip] = useState("");
 

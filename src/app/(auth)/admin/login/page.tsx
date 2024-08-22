@@ -19,16 +19,21 @@ export default function AdminLogin() {
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_SERVER}/admin/login`,
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         const id = response.data.id;
         const nama = response.data.nama;
-        sessionStorage.setItem("id", id);
-        sessionStorage.setItem("nama", nama);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("id", id);
+          sessionStorage.setItem("nama", nama);
+        }
         console.log("berhasil login");
         router.push("/admin/dashboard");
       } else {

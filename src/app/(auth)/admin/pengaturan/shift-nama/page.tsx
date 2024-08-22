@@ -1,20 +1,21 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import AdminProfile from "@/app/component/adminProfile";
 import NavbarAdminDashboard from "@/app/component/nav-admin";
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import axios from "axios";
-import debounce from "lodash.debounce";
+
+interface Pemagang {
+  username: string;
+  nama: string;
+  nama_divisi: string | null;
+  nama_shift: string | null;
+}
 
 export default function Utama() {
-  const [keyword, setKeyword] = useState('');
-  const [searchName, setSearchName] = useState('');
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const search = searchParams.get("kampus");
-    setKeyword(search || '');
-  }, [searchParams]);
+  const [searchName, setSearchName] = useState("");
+  const { kampus } = useParams();
+  const keyword = kampus;
 
   return (
     <>
@@ -30,8 +31,8 @@ export default function Utama() {
   );
 }
 
-function Search({ setSearchName }) {
-  const handleSearchNama = (e) => {
+function Search({ setSearchName }: any) {
+  const handleSearchNama = (e: any) => {
     setSearchName(e.target.value);
   };
 
@@ -39,7 +40,9 @@ function Search({ setSearchName }) {
     <div className="search flex gap-8 items-center w-full p-2">
       <div className="formSearch w-2/5 font-inter ml-0">
         <h1 className="text-base mb-2 font-bold">Shift & Divisi</h1>
-        <p className="text-xs font-inter mt-4">Shift dan Divisi setiap pengguna</p>
+        <p className="text-xs font-inter mt-4">
+          Shift dan Divisi setiap pengguna
+        </p>
         <div className="flex items-center w-1/2 mt-2">
           <input
             type="text"
@@ -54,15 +57,17 @@ function Search({ setSearchName }) {
   );
 }
 
-function Table({ keyword, searchName }) {
-  const [pemagang, setPemagang] = useState([]);
+function Table({ keyword, searchName }: any) {
+  const [pemagang, setPemagang] = useState<Pemagang[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah/pemagang/${keyword}/${searchName}`);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_SERVER}/admin/sekolah/pemagang/${keyword}/${searchName}`
+        );
         setPemagang(response.data);
       } catch (error) {
         console.error("Error searching data:", error);
@@ -76,19 +81,19 @@ function Table({ keyword, searchName }) {
     console.log(pemagang); // This will log updated pemagang
   }, [pemagang]);
 
-  const getRowClassName = (index) => {
+  const getRowClassName = (index: any) => {
     return index % 2 === 0
       ? "bg-gray-300 trLaporan border border-gray-200 text-xs font-inter"
       : "bg-white trLaporan border border-gray-200 text-xs font-inter";
   };
 
-  const handleItemsPerPageChange = (event) => {
+  const handleItemsPerPageChange = (event: any) => {
     const selectedItemsPerPage = parseInt(event.target.value, 10);
     setItemsPerPage(selectedItemsPerPage);
     setCurrentPage(1); // Reset current page when changing items per page
   };
 
-  const handlePageChange = (event) => {
+  const handlePageChange = (event: any) => {
     const selectedPage = parseInt(event.target.value, 10);
     setCurrentPage(selectedPage);
   };
@@ -169,7 +174,9 @@ function Table({ keyword, searchName }) {
             {pemagang.slice(startIndex, endIndex).map((data, index) => (
               <tr className={getRowClassName(index)} key={index}>
                 <td className="px-2 py-2 text-center">{index + 1}</td>
-                <td className="td px-2 py-2 text-center font-bold">{data.nama}</td>
+                <td className="td px-2 py-2 text-center font-bold">
+                  {data.nama}
+                </td>
                 <td className="px-2 py-2 text-center">{data.nama_divisi}</td>
                 <td className="px-2 py-2 text-center">{data.nama_shift}</td>
               </tr>
